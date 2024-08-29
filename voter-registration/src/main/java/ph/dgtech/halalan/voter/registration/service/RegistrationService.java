@@ -13,6 +13,7 @@ import ph.dgtech.halalan.voter.registration.dto.RegistrationResponse;
 
 import javax.ws.rs.core.Response;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class RegistrationService {
         user.setEmail(request.email());
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.password())));
+        user.setRealmRoles(List.of("voter-role"));
         Response response = realmResource.users().create(user);
         log.info("response: {}", response.getStatus());
         if (response.getStatus() != 201) {
@@ -38,6 +40,7 @@ public class RegistrationService {
         }
         return new RegistrationResponse(request.voterId());
     }
+
 
     public static CredentialRepresentation createPasswordCredentials(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();

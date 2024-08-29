@@ -10,17 +10,19 @@ import ph.dgtech.halalan.voter.registration.dto.RegistrationResponse;
 import ph.dgtech.halalan.voter.registration.service.RegistrationService;
 
 @RestController
-@RequestMapping("/ph/voter/registration")
+@RequestMapping("/ph/voter/")
 @RequiredArgsConstructor
 @Slf4j
 public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-    @PostMapping
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponse registerVoter(@RequestBody RegistrationRequest voterRegistrationRequest) {
+    public RegistrationResponse register(@RequestBody RegistrationRequest voterRegistrationRequest) {
         log.info("request received: {}", voterRegistrationRequest);
         return registrationService.registerVoter(voterRegistrationRequest);
     }
+
+
 }
