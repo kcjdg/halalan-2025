@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorDto> handleOtherException(Exception ex, WebRequest request) {
         String message = ex.getMessage();
         ErrorDto errorVm = new ErrorDto(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), message);
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "");
         log.warn(ERROR_LOG_FORMAT, this.getServletPath(request), 500, message);
         log.debug(ex.toString());
         return new ResponseEntity<>(errorVm, HttpStatus.INTERNAL_SERVER_ERROR);
