@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.voter.registration.config.KeyCloakPropsConfig;
 import ph.dgtech.halalan.voter.registration.dto.RegistrationRequest;
 import ph.dgtech.halalan.voter.registration.dto.RegistrationResponse;
+import ph.dgtech.halalan.voter.registration.exception.UserAlreadyExistException;
+import ph.dgtech.halalan.voter.registration.utils.KeyCloakConst;
 
 import javax.ws.rs.core.Response;
 import java.util.Collections;
@@ -32,11 +34,12 @@ public class RegistrationService {
         user.setEmail(request.email());
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.password())));
-        user.setRealmRoles(List.of("voter-role"));
+        user.setGroups(List.of(KeyCloakConst.Groups.VOTER.getValue()));
         Response response = realmResource.users().create(user);
-        log.info("response: {}", response.getStatus());
-        if (response.getStatus() != 201) {
-            throw new RuntimeException("Failed to create user");
+        switch (response.getStatus()) {
+            case 409 -> throw new UserAlreadyExistException("Username or email already exists");
+            case 201 ->  log.info("User created successfully");
+            default -> throw new RuntimeException("Failed to create user");
         }
         return new RegistrationResponse(request.voterId());
     }
@@ -49,6 +52,10 @@ public class RegistrationService {
         passwordCredentials.setValue(password);
         return passwordCredentials;
     }
+
+
+
+
 
 
 }
