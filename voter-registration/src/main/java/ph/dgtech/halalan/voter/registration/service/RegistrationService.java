@@ -34,7 +34,7 @@ public class RegistrationService {
         user.setEmail(request.email());
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.password())));
-        user.setGroups(List.of(KeyCloakConst.Groups.VOTER.getValue()));
+        user.setGroups(List.of(KeyCloakConst.REGION.NCR.getGroupCode()));
         Response response = realmResource.users().create(user);
         switch (response.getStatus()) {
             case 409 -> throw new UserAlreadyExistException("Username or email already exists");

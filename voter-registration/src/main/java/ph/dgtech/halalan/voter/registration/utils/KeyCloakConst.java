@@ -41,6 +41,9 @@ public final class KeyCloakConst {
         public String getValue() {
             return value;
         }
+        public String getGroupCode(){
+            return Groups.VOTER.getValue() + "/" + value;
+        }
     }
 
 
