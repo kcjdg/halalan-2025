@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.RolePolicyResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.keycloak.representations.idm.authorization.GroupPolicyRepresentation;
 import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.voter.registration.config.KeyCloakPropsConfig;
 import ph.dgtech.halalan.voter.registration.dto.RegistrationRequest;
 import ph.dgtech.halalan.voter.registration.dto.RegistrationResponse;
+import ph.dgtech.halalan.voter.registration.exception.UserAlreadyExistException;
 
 import javax.ws.rs.core.Response;
 import java.util.Collections;
@@ -32,11 +35,11 @@ public class RegistrationService {
         user.setEmail(request.email());
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.password())));
-        user.setRealmRoles(List.of("voter-role"));
         Response response = realmResource.users().create(user);
-        log.info("response: {}", response.getStatus());
-        if (response.getStatus() != 201) {
-            throw new RuntimeException("Failed to create user");
+        switch (response.getStatus()) {
+            case 409 -> throw new UserAlreadyExistException("Username or email already exists");
+            case 201 -> log.info("User created successfully");
+            default -> throw new RuntimeException("Failed to create user");
         }
         return new RegistrationResponse(request.voterId());
     }
