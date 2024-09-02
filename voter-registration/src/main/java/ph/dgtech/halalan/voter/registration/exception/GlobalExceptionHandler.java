@@ -9,6 +9,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import ph.dgtech.halalan.voter.registration.dto.ErrorDto;
 
+import java.util.List;
+import java.util.Optional;
+
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -19,6 +22,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleUserAlreadyExistsException(UserAlreadyExistException ex, WebRequest request) {
         String message = ex.getMessage();
         ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST.toString(), "Bad request", message);
+        log.warn(ERROR_LOG_FORMAT, this.getServletPath(request), 400, message);
+        log.debug(ex.toString());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<ErrorDto> handlInvalidRequest(InvalidFormatException ex, WebRequest request) {
+        String message = ex.getMessage();
+        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST.toString(), "Bad request", message, ex.getFieldError());
         log.warn(ERROR_LOG_FORMAT, this.getServletPath(request), 400, message);
         log.debug(ex.toString());
         return ResponseEntity.badRequest().body(error);
