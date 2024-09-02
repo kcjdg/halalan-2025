@@ -21,7 +21,7 @@
         <module>notification-service</module>
         <module>polling-service</module>
         <module>result-aggregation</module>
-        <module>voter-registration</module>
+        <module>voter-profile</module>
         <module>vote-collection</module>
     </modules>
 
