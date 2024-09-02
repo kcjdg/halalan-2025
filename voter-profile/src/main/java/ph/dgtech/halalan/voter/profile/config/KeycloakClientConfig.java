@@ -2,6 +2,7 @@ package ph.dgtech.halalan.voter.profile.config;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,4 +26,10 @@ public class KeycloakClientConfig {
             .clientSecret(keycloakPropsConfig.getCredentials().getSecret())
             .build();
     }
+
+    @Bean
+    public RealmResource realmResource(Keycloak keycloak) {
+        return keycloak.realm(keycloakPropsConfig.getRealm());
+    }
+
 }

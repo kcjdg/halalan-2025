@@ -3,12 +3,14 @@ package ph.dgtech.halalan.voter.profile.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import lombok.Builder;
 import ph.dgtech.halalan.voter.profile.dto.validation.MinAge;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+@Builder
 public record VoterRequestDetails(
         @NotNull
         String voterId,
@@ -26,6 +28,8 @@ public record VoterRequestDetails(
         String gender,
         @Email
         String email,
+        String username,
+        String password,
         String photo,
         String nationalIdNumber,
         String voterRegistrationNumber,
@@ -41,8 +45,6 @@ public record VoterRequestDetails(
         String pollingStation,
         String votingDistrict,
         String electoralDivision,
-        String username,
-        String password,
         boolean twoFactorAuthenticationEnabled,
         List<SecurityQuestion> securityQuestions,
         ZonedDateTime registrationDate,

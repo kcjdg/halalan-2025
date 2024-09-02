@@ -22,11 +22,17 @@ public class ProfileController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public VoterResponseDetails register(@Valid @RequestBody VoterRequestDetails voterRequestDetails) {
-        log.info("request received: {}", voterRequestDetails);
+        log.info("registration request received: {}", voterRequestDetails);
         return profileService.registerVoter(voterRequestDetails);
     }
 
 
+    @PutMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable String userId, @RequestBody  @Valid VoterRequestDetails voterRequestDetails) {
+        log.info("update request received: {}", voterRequestDetails);
+        profileService.updateVoter(userId, voterRequestDetails);
+    }
 
 
 }

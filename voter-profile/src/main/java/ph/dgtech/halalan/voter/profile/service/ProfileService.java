@@ -2,26 +2,21 @@ package ph.dgtech.halalan.voter.profile.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
-import ph.dgtech.halalan.voter.profile.config.KeyCloakPropsConfig;
-import ph.dgtech.halalan.voter.profile.dto.VoterResponseDetails;
 import ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails;
+import ph.dgtech.halalan.voter.profile.dto.VoterResponseDetails;
 import ph.dgtech.halalan.voter.profile.exception.InvalidRequestFormatException;
+import ph.dgtech.halalan.voter.profile.exception.NotFoundException;
 import ph.dgtech.halalan.voter.profile.exception.UserAlreadyExistException;
 import ph.dgtech.halalan.voter.profile.utils.KeyCloakConst;
 
-import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails.Gender;
 
@@ -30,12 +25,10 @@ import static ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails.Gender;
 @Slf4j
 public class ProfileService {
 
-    private final Keycloak keycloak;
-    private final KeyCloakPropsConfig keycloakPropsConfig;
+    private final RealmResource realmResource;
 
     public VoterResponseDetails registerVoter(VoterRequestDetails request) {
-        RealmResource realmResource = keycloak.realm(keycloakPropsConfig.getRealm());
-        UserRepresentation user = new UserRepresentation();
+        var user = new UserRepresentation();
         user.setUsername(request.username());
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
@@ -44,25 +37,45 @@ public class ProfileService {
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.password())));
         user.setGroups(List.of(KeyCloakConst.REGION.NCR.getGroupCode()));
         user.setAttributes(setFields(request));
-        Response response = realmResource.users().create(user);
+        var response = realmResource.users().create(user);
         switch (response.getStatus()) {
             case 409 -> throw new UserAlreadyExistException("Username or email already exists");
-            case 400 -> throw new InvalidRequestFormatException("Invalid request format", response.readEntity(Object.class));
-            case 201 ->  log.info("User created successfully");
+            case 400 ->
+                    throw new InvalidRequestFormatException("Invalid request format", response.readEntity(Object.class));
+            case 201 -> log.info("User created successfully");
             default -> throw new RuntimeException("Failed to create user");
         }
 
-        return new VoterResponseDetails(
-                getUserId(response.getLocation()),
-                request.username(),
-                request.voterId(),
-                request.firstName(),
-                request.lastName());
+        return new VoterResponseDetails(getUserId(response.getLocation()), request.username(), request.voterId(), request.firstName(), request.lastName());
+    }
+
+    public void updateVoter(String userId, VoterRequestDetails request) {
+        var userOpt = getUserById(userId);
+        if (!userOpt.isPresent()) throw new NotFoundException("Voter not found");
+        var user = userOpt.get();
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
+        Map<String, List<String>> fieldMap = setFields(request);
+        final var now = LocalDateTime.now();
+        fieldMap.put("updatedAt", List.of(now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+        user.setAttributes(fieldMap);
+        realmResource.users().get(userId).update(user);
+    }
+
+
+    public Optional<UserRepresentation> getUserById(String userId) {
+        try {
+            var userResource = realmResource.users().get(userId);
+            return Optional.ofNullable(userResource.toRepresentation());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
 
     public static CredentialRepresentation createPasswordCredentials(String password) {
-        CredentialRepresentation passwordCredentials = new CredentialRepresentation();
+        var passwordCredentials = new CredentialRepresentation();
         passwordCredentials.setTemporary(false);
         passwordCredentials.setType(CredentialRepresentation.PASSWORD);
         passwordCredentials.setValue(password);
@@ -80,11 +93,9 @@ public class ProfileService {
     }
 
 
-
-    private String getUserId(URI location){
+    private String getUserId(URI location) {
         return location.getPath().replaceAll(".*/([^/]+)$", "$1");
     }
-
 
 
 }
