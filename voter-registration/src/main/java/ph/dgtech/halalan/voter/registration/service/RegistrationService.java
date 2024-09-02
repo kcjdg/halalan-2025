@@ -8,14 +8,22 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.voter.registration.config.KeyCloakPropsConfig;
+import ph.dgtech.halalan.voter.registration.dto.ErrorDto;
 import ph.dgtech.halalan.voter.registration.dto.RegistrationRequest;
 import ph.dgtech.halalan.voter.registration.dto.RegistrationResponse;
+import ph.dgtech.halalan.voter.registration.exception.InvalidFormatException;
 import ph.dgtech.halalan.voter.registration.exception.UserAlreadyExistException;
 import ph.dgtech.halalan.voter.registration.utils.KeyCloakConst;
 
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static ph.dgtech.halalan.voter.registration.dto.RegistrationRequest.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +43,15 @@ public class RegistrationService {
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.password())));
         user.setGroups(List.of(KeyCloakConst.REGION.NCR.getGroupCode()));
+        user.setAttributes(setFields(request));
         Response response = realmResource.users().create(user);
         switch (response.getStatus()) {
             case 409 -> throw new UserAlreadyExistException("Username or email already exists");
+            case 400 -> throw new InvalidFormatException("Invalid format request ",  response.readEntity(ErrorDto.Field.class));
             case 201 ->  log.info("User created successfully");
             default -> throw new RuntimeException("Failed to create user");
         }
+        response.close();
         return new RegistrationResponse(request.voterId());
     }
 
@@ -53,6 +64,15 @@ public class RegistrationService {
         return passwordCredentials;
     }
 
+
+    private Map<String, List<String>> setFields(RegistrationRequest request) {
+        Map<String, List<String>> fields = new HashMap<>();
+        fields.put("voterId", List.of(request.voterId()));
+        fields.put("dob", List.of(request.dob().format(DateTimeFormatter.ISO_LOCAL_DATE)));
+        fields.put("middleName", List.of(request.middleName()));
+        fields.put("gender", List.of(Gender.fromString(request.gender()).name()));
+        return fields;
+    }
 
 
 

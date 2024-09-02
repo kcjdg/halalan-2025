@@ -10,7 +10,6 @@ public record ErrorDto(String statusCode, String title, String detail, List<Fiel
 
     public record Field(List<Error> errors) {
         public record Error(String field, String errorMessage, List<String> params) {
-
         }
     }
 

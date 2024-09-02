@@ -10,7 +10,7 @@ public record RegistrationRequest(
         String middleName,
         String lastName,
         LocalDate dob,
-        Gender gender,
+        String gender,
         String photo,
         String nationalIdNumber,
         String voterRegistrationNumber,
@@ -41,18 +41,28 @@ public record RegistrationRequest(
         String updatedBy,
         String notes
 ) {
-    public record SecurityQuestion(String question, String answerHash) {}
+    public record SecurityQuestion(String question, String answerHash) {
+    }
+
     public enum Gender {
         MALE("M"),
         FEMALE("F");
-
         private String code;
+
         Gender(String code) {
-            this.code= code;
+            this.code = code;
         }
 
         public String getCode() {
             return code;
+        }
+
+        public static Gender fromString(String gender) {
+           return switch (gender.toUpperCase()){
+                case "M" -> Gender.MALE;
+                case "F" -> Gender.FEMALE;
+                default -> throw new IllegalArgumentException("Unspecified gender");
+            };
         }
     }
 }
