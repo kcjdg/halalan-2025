@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public record RegistrationRequest(
+public record VoterRequestDetails(
         @NotNull
         String voterId,
         @NotNull
