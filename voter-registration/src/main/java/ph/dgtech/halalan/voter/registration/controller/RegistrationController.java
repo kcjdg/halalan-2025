@@ -1,6 +1,7 @@
 package ph.dgtech.halalan.voter.registration.controller;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class RegistrationController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public RegistrationResponse register(@RequestBody RegistrationRequest voterRegistrationRequest) {
+    public RegistrationResponse register(@Valid @RequestBody RegistrationRequest voterRegistrationRequest) {
         log.info("request received: {}", voterRegistrationRequest);
         return registrationService.registerVoter(voterRegistrationRequest);
     }

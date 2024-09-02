@@ -1,22 +1,36 @@
 package ph.dgtech.halalan.voter.registration.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import ph.dgtech.halalan.voter.registration.dto.validation.MinAge;
+
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public record RegistrationRequest(
+        @NotNull
         String voterId,
+        @NotNull
         String firstName,
+        @NotNull
         String middleName,
+        @NotNull
         String lastName,
+        @NotNull
+        @Past
+        @MinAge(18)
         LocalDate dob,
+        @NotNull
         String gender,
+        @Email
+        String email,
         String photo,
         String nationalIdNumber,
         String voterRegistrationNumber,
         String passportNumber,
         String driversLicenseNumber,
-        String email,
         String phoneNumber,
         String addressLine1,
         String addressLine2,
@@ -58,7 +72,7 @@ public record RegistrationRequest(
         }
 
         public static Gender fromString(String gender) {
-           return switch (gender.toUpperCase()){
+            return switch (gender.toUpperCase()) {
                 case "M" -> Gender.MALE;
                 case "F" -> Gender.FEMALE;
                 default -> throw new IllegalArgumentException("Unspecified gender");

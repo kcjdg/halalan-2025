@@ -1,5 +1,7 @@
 package ph.dgtech.halalan.voter.registration.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import ph.dgtech.halalan.voter.registration.dto.ErrorDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +40,20 @@ public class GlobalExceptionHandler {
         log.debug(ex.toString());
         return ResponseEntity.badRequest().body(error);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ErrorDto> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        List<String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + " " + error.getDefaultMessage())
+                .toList();
+
+        ErrorDto errorVm = new ErrorDto(HttpStatus.BAD_REQUEST.toString(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(), "Request information is not valid", errors);
+        return ResponseEntity.badRequest().body(errorVm);
+    }
+
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorDto> handleOtherException(Exception ex, WebRequest request) {
