@@ -3,6 +3,7 @@ package ph.dgtech.halalan.voter.registration.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -27,15 +28,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
-    @ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<ErrorDto> handlInvalidRequest(InvalidFormatException ex, WebRequest request) {
+
+    @ExceptionHandler(InvalidRequestFormatException.class)
+    public ResponseEntity<ErrorDto> handlInvalidRequest(InvalidRequestFormatException ex, WebRequest request) {
         String message = ex.getMessage();
-        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST.toString(), "Bad request", message, ex.getFieldError());
+        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST.toString(), "Bad request", "", List.of(ex.getDetail()));
         log.warn(ERROR_LOG_FORMAT, this.getServletPath(request), 400, message);
         log.debug(ex.toString());
         return ResponseEntity.badRequest().body(error);
     }
-
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorDto> handleOtherException(Exception ex, WebRequest request) {
