@@ -12,14 +12,13 @@ import ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails;
 import ph.dgtech.halalan.voter.profile.service.ProfileService;
 
 @RestController
-@RequestMapping("/ph/voter/")
 @RequiredArgsConstructor
 @Slf4j
 public class ProfileController {
 
     private final ProfileService profileService;
 
-    @PostMapping("/register")
+    @PostMapping("/halalan/register")
     @ResponseStatus(HttpStatus.CREATED)
     public VoterResponseDetails register(@Valid @RequestBody VoterRequestDetails voterRequestDetails) {
         log.info("registration request received: {}", voterRequestDetails);
@@ -27,12 +26,13 @@ public class ProfileController {
     }
 
 
-    @PutMapping("/{userId}")
+    @PutMapping("/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable String userId, @RequestBody  @Valid VoterRequestDetails voterRequestDetails) {
+    public void update(@RequestBody  @Valid VoterRequestDetails voterRequestDetails) {
         log.info("update request received: {}", voterRequestDetails);
-        profileService.updateVoter(userId, voterRequestDetails);
+        profileService.updateVoter(voterRequestDetails);
     }
+
 
 
 }
