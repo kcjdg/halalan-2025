@@ -1,6 +1,11 @@
 package ph.dgtech.halalan.voter.profile.utils;
 
+import java.time.format.DateTimeFormatter;
+
 public final class KeyCloakConst {
+
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
     public enum Groups {
         VOTER("voter-group"),
         ADMIN("admin-group"),

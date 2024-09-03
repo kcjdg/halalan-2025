@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.VoterResponseDetails;
@@ -49,7 +50,8 @@ public class ProfileService {
         return new VoterResponseDetails(getUserId(response.getLocation()), request.username(), request.voterId(), request.firstName(), request.lastName());
     }
 
-    public void updateVoter(String userId, VoterRequestDetails request) {
+    public void updateVoter(VoterRequestDetails request) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         var userOpt = getUserById(userId);
         if (!userOpt.isPresent()) throw new NotFoundException("Voter not found");
         var user = userOpt.get();
@@ -58,7 +60,7 @@ public class ProfileService {
         user.setEmail(request.email());
         Map<String, List<String>> fieldMap = setFields(request);
         final var now = LocalDateTime.now();
-        fieldMap.put("updatedAt", List.of(now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+        fieldMap.put("lastUpdateDateTime", List.of(now.format(KeyCloakConst.formatter)));
         user.setAttributes(fieldMap);
         realmResource.users().get(userId).update(user);
     }

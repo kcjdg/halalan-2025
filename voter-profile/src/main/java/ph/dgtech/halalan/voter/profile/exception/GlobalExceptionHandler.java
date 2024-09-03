@@ -10,6 +10,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import ph.dgtech.halalan.voter.profile.dto.ErrorDto;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @ControllerAdvice
@@ -17,6 +18,17 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     private static final String ERROR_LOG_FORMAT = "Error: URI: {}, ErrorCode: {}, Message: {}";
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        String message = ex.getMessage();
+        ErrorDto errorVm = new ErrorDto(HttpStatus.FORBIDDEN.toString(), "Access Denied", message);
+        log.warn(ERROR_LOG_FORMAT, this.getServletPath(request), 403, message);
+        log.debug(ex.toString());
+        return new ResponseEntity<>(errorVm, HttpStatus.FORBIDDEN);
+    }
+
+
 
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ErrorDto> handleUserAlreadyExistsException(UserAlreadyExistException ex, WebRequest request) {
