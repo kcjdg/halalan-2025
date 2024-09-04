@@ -34,5 +34,10 @@ public class ProfileController {
     }
 
 
+    @GetMapping("/")
+    public String test(){
+        return "success";
+    }
+
 
 }

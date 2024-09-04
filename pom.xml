@@ -35,6 +35,8 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.0.2</springdoc-openapi-starter-webmvc-ui.version>
+        <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version>
+        <rest-assured.version>5.4.0</rest-assured.version>
 
     </properties>
     <dependencyManagement>
