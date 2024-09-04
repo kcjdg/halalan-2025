@@ -238,8 +238,8 @@
         "microprofile-jwt"
       ]
     },
-    {
-      "id": "c683c33f-a584-46b1-af9f-d401ba93af85",
+    {      "id": "c683c33f-a584-46b1-af9f-d401ba93af85",
+
       "clientId": "halalan-voters-api",
       "surrogateAuthRequired": false,
       "enabled": true,

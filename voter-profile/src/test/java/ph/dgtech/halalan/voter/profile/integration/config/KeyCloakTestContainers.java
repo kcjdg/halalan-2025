@@ -2,14 +2,18 @@ package ph.dgtech.halalan.voter.profile.integration.config;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
 import jakarta.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 
 import java.util.Map;
 
@@ -65,12 +69,21 @@ public abstract class KeyCloakTestContainers {
                         "scope", "openid",
                         "grant_type", "client_credentials",
                         "client_id", "halalan-voters-api",
-                        "client_secret",""
+                        "client_secret","secret"
                 ))
                 .post(keycloak.getAuthServerUrl() + "/realms/halalan-voters/protocol/openid-connect/token")
                 .then().assertThat().statusCode(200)
                 .extract().path("access_token");
     }
 
-
+    protected RequestSpecification getRequestSpecification() {
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        return new RequestSpecBuilder()
+                .setPort(port)
+                .addHeader(
+                        HttpHeaders.CONTENT_TYPE,
+                        MediaType.APPLICATION_JSON_VALUE
+                )
+                .build();
+    }
 }

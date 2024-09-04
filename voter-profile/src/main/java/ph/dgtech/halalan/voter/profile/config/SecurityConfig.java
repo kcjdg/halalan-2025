@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 @Configuration
 @Slf4j
-@Order(1)
 public class SecurityConfig {
 
     @Bean
@@ -55,7 +54,6 @@ public class SecurityConfig {
         Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
             Map<String, Collection<String>> realmAccess = jwt.getClaim("realm_access");
             Collection<String> roles = realmAccess.get("roles");
-            log.info("check roles " + roles);
             return roles.stream()
                     .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                     .collect(Collectors.toList());

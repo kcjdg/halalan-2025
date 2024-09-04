@@ -32,10 +32,29 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                 .statusCode(200);
     }
 
-    @Test
-    public void givenClientCredentials_whenRegister_shouldReturn201() {
-
-
-    }
+//    @Test
+//    public void givenClientCredentials_whenRegister_shouldReturn201() {
+//        String json = """
+//                {
+//                    "username": "uniquename",
+//                    "firstName": "john",
+//                    "middleName":"deep",
+//                    "lastName": "doe",
+//                    "password": "123",
+//                    "email": "uniquename@gmail.com",
+//                    "dob": "1993-01-01",
+//                    "gender": "M",
+//                    "voterId": "ID-0011"
+//                }
+//                """;
+//        given(getRequestSpecification())
+//                .auth().oauth2(getAccessTokenUsingClientCredentials())
+//                .body(json)
+//                .when()
+//                .post(PATH + "halalan/register")
+//                .then()
+//                .statusCode(HttpStatus.CREATED.value())
+//                .log().ifValidationFails();
+//    }
 
 }
