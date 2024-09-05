@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails;
@@ -43,6 +44,7 @@ public class ProfileService {
             case 409 -> throw new UserAlreadyExistException("Username or email already exists");
             case 400 ->
                     throw new InvalidRequestFormatException("Invalid request format", response.readEntity(Object.class));
+            case 403 -> throw new AccessDeniedException("Forbidden");
             case 201 -> log.info("User created successfully");
             default -> throw new RuntimeException("Failed to create user");
         }

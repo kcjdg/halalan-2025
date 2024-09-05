@@ -5,7 +5,6 @@ import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import jakarta.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +32,7 @@ public abstract class KeyCloakTestContainers {
     static {
         keycloak = new KeycloakContainer().withRealmImportFile("keycloak/realm-export.json");
         keycloak.start();
+
     }
 
     @PostConstruct
@@ -40,9 +40,11 @@ public abstract class KeyCloakTestContainers {
         RestAssured.baseURI = "http://localhost:" + port;
     }
 
+
     @DynamicPropertySource
     static void registerResourceServerIssuerProperty(DynamicPropertyRegistry registry) {
         registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> keycloak.getAuthServerUrl() + "/realms/halalan-voters");
+        registry.add("keycloak.auth-server-url", () -> keycloak.getAuthServerUrl());
     }
 
 
@@ -68,7 +70,7 @@ public abstract class KeyCloakTestContainers {
                 .formParams(Map.of(
                         "scope", "openid",
                         "grant_type", "client_credentials",
-                        "client_id", "halalan-voters-api",
+                        "client_id", "spring-microservice-client",
                         "client_secret","secret"
                 ))
                 .post(keycloak.getAuthServerUrl() + "/realms/halalan-voters/protocol/openid-connect/token")
