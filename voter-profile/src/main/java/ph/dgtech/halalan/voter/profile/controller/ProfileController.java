@@ -28,7 +28,7 @@ public class ProfileController {
 
     @PutMapping("/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody  @Valid VoterRequestDetails voterRequestDetails) {
+    public void update(@RequestBody @Valid VoterRequestDetails voterRequestDetails) {
         log.info("update request received: {}", voterRequestDetails);
         profileService.updateVoter(voterRequestDetails);
     }

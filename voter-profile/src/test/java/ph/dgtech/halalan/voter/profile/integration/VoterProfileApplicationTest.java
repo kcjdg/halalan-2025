@@ -29,11 +29,33 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                 .when()
                 .get(PATH)
                 .then()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    public void givenClientCredentials_whenRegister_shouldReturn201() {
+    public void givenUser_whenUpdated_shouldReturnNoContent() {
+        String json = """
+                {
+                   "firstName": "Jane",
+                    "middleName":"deep",
+                    "lastName": "Doe",
+                    "email": "jane.doe@halalan-voters.com",
+                    "dob": "1993-01-01",
+                    "gender": "F",
+                    "voterId": "ID-0012"
+                }
+                """;
+        given(getRequestSpecification())
+                .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .body(json)
+                .when()
+                .put(PATH+"/")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    public void givenClientCredentials_whenRegister_shouldReturnCreatedStatus() {
         String json = """
                 {
                     "username": "uniquename",
@@ -56,5 +78,6 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                 .statusCode(HttpStatus.CREATED.value())
                 .log().ifValidationFails();
     }
+
 
 }
