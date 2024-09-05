@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class VoterProfileApplicationTest extends KeyCloakTestContainers {
 
-    private static String PATH = "/v1";
+    private static final String PATH = "/v1";
 
     @Test
     void givenUnauthenticatedUser_whenAccess_shouldReturnUnAuthorized() {

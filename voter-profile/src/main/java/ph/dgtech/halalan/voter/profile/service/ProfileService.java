@@ -1,6 +1,7 @@
 package ph.dgtech.halalan.voter.profile.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -29,6 +30,7 @@ public class ProfileService {
 
     private final RealmResource realmResource;
 
+    @SneakyThrows
     public VoterResponseDetails registerVoter(VoterRequestDetails request) {
         var user = new UserRepresentation();
         user.setUsername(request.username());
@@ -55,7 +57,7 @@ public class ProfileService {
     public void updateVoter(VoterRequestDetails request) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         var userOpt = getUserById(userId);
-        if (!userOpt.isPresent()) throw new NotFoundException("Voter not found");
+        if (userOpt.isEmpty()) throw new NotFoundException("Voter not found");
         var user = userOpt.get();
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
