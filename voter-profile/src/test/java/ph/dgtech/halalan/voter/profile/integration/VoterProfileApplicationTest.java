@@ -1,0 +1,83 @@
+package ph.dgtech.halalan.voter.profile.integration;
+
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import ph.dgtech.halalan.voter.profile.integration.config.KeyCloakTestContainers;
+
+import static io.restassured.RestAssured.given;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class VoterProfileApplicationTest extends KeyCloakTestContainers {
+
+    private static final String PATH = "/v1";
+
+    @Test
+    void givenUnauthenticatedUser_whenAccess_shouldReturnUnAuthorized() {
+        given()
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    public void givenAuthenticatedUser_whenAccess_shouldReturnOK() {
+        given()
+                .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .when()
+                .get(PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void givenUser_whenUpdated_shouldReturnNoContent() {
+        String json = """
+                {
+                   "firstName": "Jane",
+                    "middleName":"deep",
+                    "lastName": "Doe",
+                    "email": "jane.doe@halalan-voters.com",
+                    "dob": "1993-01-01",
+                    "gender": "F",
+                    "voterId": "ID-0012"
+                }
+                """;
+        given(getRequestSpecification())
+                .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .body(json)
+                .when()
+                .put(PATH+"/")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    public void givenClientCredentials_whenRegister_shouldReturnCreatedStatus() {
+        String json = """
+                {
+                    "username": "uniquename",
+                    "firstName": "john",
+                    "middleName":"deep",
+                    "lastName": "doe",
+                    "password": "123",
+                    "email": "uniquename@gmail.com",
+                    "dob": "1993-01-01",
+                    "gender": "M",
+                    "voterId": "ID-0011"
+                }
+                """;
+        given(getRequestSpecification())
+                .auth().oauth2(getAccessTokenUsingClientCredentials())
+                .body(json)
+                .when()
+                .post(PATH + "/halalan/register")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .log().ifValidationFails();
+    }
+
+
+}
