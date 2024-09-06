@@ -37,6 +37,7 @@
         <springdoc-openapi-starter-webmvc-ui.version>2.0.2</springdoc-openapi-starter-webmvc-ui.version>
         <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version>
         <rest-assured.version>5.4.0</rest-assured.version>
+        <org.mapstruct.extensions.spring.version>1.1.2</org.mapstruct.extensions.spring.version>
 
     </properties>
     <dependencyManagement>
@@ -75,6 +76,11 @@
                 <groupId>org.keycloak</groupId>
                 <artifactId>keycloak-admin-client</artifactId>
                 <version>${org.keycloak.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct.extensions.spring</groupId>
+                <artifactId>mapstruct-spring-annotations</artifactId>
+                <version>${org.mapstruct.extensions.spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -141,6 +147,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${lombok-mapstruct-binding.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct.extensions.spring</groupId>
+                            <artifactId>mapstruct-spring-extensions</artifactId>
+                            <version>${org.mapstruct.extensions.spring.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

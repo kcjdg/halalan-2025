@@ -6,22 +6,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails;
-import ph.dgtech.halalan.voter.profile.dto.VoterResponseDetails;
+import ph.dgtech.halalan.voter.profile.dto.ProfileUpdateRequestDetails;
+import ph.dgtech.halalan.voter.profile.dto.RegistrationRequestDetails;
+import ph.dgtech.halalan.voter.profile.dto.RegistrationResponseDetails;
 import ph.dgtech.halalan.voter.profile.exception.InvalidRequestFormatException;
 import ph.dgtech.halalan.voter.profile.exception.NotFoundException;
 import ph.dgtech.halalan.voter.profile.exception.UserAlreadyExistException;
 import ph.dgtech.halalan.voter.profile.utils.KeyCloakConst;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails.Gender;
+import static ph.dgtech.halalan.voter.profile.dto.info.PersonalInfo.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,45 +33,59 @@ import static ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails.Gender;
 public class ProfileService {
 
     private final RealmResource realmResource;
+    private final ConversionService conversionService;
 
     @SneakyThrows
-    public VoterResponseDetails registerVoter(VoterRequestDetails request) {
+    public RegistrationResponseDetails registerVoter(RegistrationRequestDetails request) {
         var user = new UserRepresentation();
-        user.setUsername(request.username());
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setEmail(request.email());
+        user.setUsername(request.system().username());
+        user.setFirstName(request.personal().firstName());
+        user.setLastName(request.personal().lastName());
+        user.setEmail(request.personal().email());
         user.setEnabled(true);
-        user.setCredentials(Collections.singletonList(createPasswordCredentials(request.password())));
+        user.setCredentials(Collections.singletonList(createPasswordCredentials(request.system().password())));
         user.setGroups(List.of(KeyCloakConst.REGION.NCR.getGroupCode()));
-        user.setAttributes(setFields(request));
+        user.setAttributes(
+                setFields(
+                        request.votingInfo().voterId(),
+                        request.personal().dob(),
+                        request.personal().middleName(),
+                        request.personal().gender()
+                )
+        );
         var response = realmResource.users().create(user);
         switch (response.getStatus()) {
-            case 409 -> throw new UserAlreadyExistException("Username or email already exists");
             case 400 ->
                     throw new InvalidRequestFormatException("Invalid request format", response.readEntity(Object.class));
             case 403 -> throw new AccessDeniedException("Forbidden");
+            case 409 -> throw new UserAlreadyExistException("Username or email already exists");
             case 201 -> log.info("User created successfully");
             default -> throw new RuntimeException("Failed to create user");
         }
 
-        return new VoterResponseDetails(getUserId(response.getLocation()), request.username(), request.voterId(), request.firstName(), request.lastName());
+        return new RegistrationResponseDetails(getUserId(response.getLocation()), request.system().username(), request.votingInfo().voterId(), request.personal().firstName(), request.personal().lastName());
     }
 
-    public void updateVoter(VoterRequestDetails request) {
+    public void updateVoter(ProfileUpdateRequestDetails request) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         var userOpt = getUserById(userId);
         if (userOpt.isEmpty()) throw new NotFoundException("Voter not found");
         var user = userOpt.get();
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setEmail(request.email());
-        Map<String, List<String>> fieldMap = setFields(request);
+        user.setFirstName(request.personal().firstName());
+        user.setLastName(request.personal().lastName());
+        user.setEmail(request.personal().email());
+        Map<String, List<String>> fieldMap = setFields(
+                request.votingInfo().voterId(),
+                request.personal().dob(),
+                request.personal().middleName(),
+                request.personal().gender()
+        );
         final var now = LocalDateTime.now();
         fieldMap.put("lastUpdateDateTime", List.of(now.format(KeyCloakConst.formatter)));
         user.setAttributes(fieldMap);
         realmResource.users().get(userId).update(user);
     }
+
 
 
     public Optional<UserRepresentation> getUserById(String userId) {
@@ -89,12 +107,13 @@ public class ProfileService {
     }
 
 
-    private Map<String, List<String>> setFields(VoterRequestDetails request) {
+    private Map<String, List<String>> setFields(String voterId, LocalDate dob,
+                                                String middleName, String gender) {
         Map<String, List<String>> fields = new HashMap<>();
-        fields.put("voterId", List.of(request.voterId()));
-        fields.put("dob", List.of(request.dob().format(DateTimeFormatter.ISO_LOCAL_DATE)));
-        fields.put("middleName", List.of(request.middleName()));
-        fields.put("gender", List.of(Gender.fromString(request.gender()).name()));
+        fields.put("voterId", List.of(voterId));
+        fields.put("dob", List.of(dob.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+        fields.put("middleName", List.of(middleName));
+        fields.put("gender", List.of(Gender.fromString(gender).name()));
         return fields;
     }
 
