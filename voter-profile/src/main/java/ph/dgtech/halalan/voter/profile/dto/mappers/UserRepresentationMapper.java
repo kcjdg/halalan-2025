@@ -23,19 +23,13 @@ import static ph.dgtech.halalan.voter.profile.dto.info.PersonalInfo.*;
 public interface UserRepresentationMapper {
 
 
-    @Mapping(target = ".", source = "personal", qualifiedByName = "mapFromPersonalInfo")
-    @Mapping(target = ".", source = "system", qualifiedByName = "mapFromSystemInfo")
+    @Mapping(target = ".", source = "personal")
+    @Mapping(target = ".", source = "system")
     UserRepresentation mapFromRegistration(RegistrationRequestDetails source);
 
-    @Mapping(target = ".", source = "personal", qualifiedByName = "mapFromPersonalInfo")
+    @Mapping(target = ".", source = "personal")
     @Mapping(target = ".", source = "votingInfo")
     UserRepresentation mapFromUpdate(ProfileUpdateRequestDetails source);
-
-    @Named("mapFromPersonalInfo")
-    UserRepresentation mapFromPersonalInfo(PersonalInfo source);
-
-    @Named("mapFromSystemInfo")
-    UserRepresentation mapFromPersonalInfo(SystemInfo source);
 
 
     @AfterMapping
