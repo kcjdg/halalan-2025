@@ -7,8 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import ph.dgtech.halalan.voter.profile.dto.VoterResponseDetails;
-import ph.dgtech.halalan.voter.profile.dto.VoterRequestDetails;
+import ph.dgtech.halalan.voter.profile.dto.ProfileUpdateRequestDetails;
+import ph.dgtech.halalan.voter.profile.dto.RegistrationRequestDetails;
+import ph.dgtech.halalan.voter.profile.dto.RegistrationResponseDetails;
 import ph.dgtech.halalan.voter.profile.service.ProfileService;
 
 @RestController
@@ -20,22 +21,22 @@ public class ProfileController {
 
     @PostMapping("/halalan/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public VoterResponseDetails register(@Valid @RequestBody VoterRequestDetails voterRequestDetails) {
-        log.info("registration request received: {}", voterRequestDetails);
-        return profileService.registerVoter(voterRequestDetails);
+    public RegistrationResponseDetails register(@Valid @RequestBody RegistrationRequestDetails request) {
+        log.info("registration request received: {}", request);
+        return profileService.registerVoter(request);
     }
 
 
     @PutMapping("/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody @Valid VoterRequestDetails voterRequestDetails) {
-        log.info("update request received: {}", voterRequestDetails);
-        profileService.updateVoter(voterRequestDetails);
+    public void update(@RequestBody @Valid ProfileUpdateRequestDetails request) {
+        log.info("update request received: {}", request);
+        profileService.updateVoter(request);
     }
 
 
     @GetMapping("/")
-    public String test(){
+    public String getUser(){
         return "success";
     }
 

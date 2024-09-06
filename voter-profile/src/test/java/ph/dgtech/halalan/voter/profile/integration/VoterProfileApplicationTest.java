@@ -15,11 +15,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
 
     @Test
     void givenUnauthenticatedUser_whenAccess_shouldReturnUnAuthorized() {
-        given()
-                .when()
-                .get(PATH)
-                .then()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+        given().when().get(PATH).then().statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
@@ -27,8 +23,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
         given()
                 .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
                 .when()
-                .get(PATH)
-                .then()
+                .get(PATH).then()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -36,20 +31,23 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
     public void givenUser_whenUpdated_shouldReturnNoContent() {
         String json = """
                 {
+                   "personal": {
                    "firstName": "Jane",
-                    "middleName":"deep",
+                    "middleName": "deep",
                     "lastName": "Doe",
                     "email": "jane.doe@halalan-voters.com",
                     "dob": "1993-01-01",
-                    "gender": "F",
+                    "gender": "F"
+                   },
+                    "votingInfo": {
                     "voterId": "ID-0012"
+                   }
                 }
+                
                 """;
-        given(getRequestSpecification())
-                .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
-                .body(json)
-                .when()
-                .put(PATH+"/")
+        given(getRequestSpecification()).auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .body(json).when()
+                .put(PATH + "/")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -58,16 +56,22 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
     public void givenClientCredentials_whenRegister_shouldReturnCreatedStatus() {
         String json = """
                 {
-                    "username": "uniquename",
-                    "firstName": "john",
-                    "middleName":"deep",
-                    "lastName": "doe",
-                    "password": "123",
-                    "email": "uniquename@gmail.com",
-                    "dob": "1993-01-01",
-                    "gender": "M",
-                    "voterId": "ID-0011"
-                }
+                     "system": {
+                       "username": "johnwill",
+                       "password": "123"
+                     },
+                     "personal": {
+                       "firstName": "John",
+                       "middleName": "Everson",
+                       "lastName": "Williams",
+                       "email": "johnwill@gmail.com",
+                       "dob": "1993-01-01",
+                       "gender": "M"
+                     },
+                     "votingInfo": {
+                       "voterId": "ID-0011"
+                     }
+                   }
                 """;
         given(getRequestSpecification())
                 .auth().oauth2(getAccessTokenUsingClientCredentials())
