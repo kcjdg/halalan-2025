@@ -6,25 +6,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.voter.profile.dto.ProfileUpdateRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationResponseDetails;
+import ph.dgtech.halalan.voter.profile.dto.mappers.UserRepresentationMapper;
 import ph.dgtech.halalan.voter.profile.exception.InvalidRequestFormatException;
 import ph.dgtech.halalan.voter.profile.exception.NotFoundException;
 import ph.dgtech.halalan.voter.profile.exception.UserAlreadyExistException;
 import ph.dgtech.halalan.voter.profile.utils.KeyCloakConst;
 
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-import static ph.dgtech.halalan.voter.profile.dto.info.PersonalInfo.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -33,26 +30,14 @@ import static ph.dgtech.halalan.voter.profile.dto.info.PersonalInfo.*;
 public class ProfileService {
 
     private final RealmResource realmResource;
-    private final ConversionService conversionService;
+    private final UserRepresentationMapper mapper;
 
     @SneakyThrows
     public RegistrationResponseDetails registerVoter(RegistrationRequestDetails request) {
-        var user = new UserRepresentation();
-        user.setUsername(request.system().username());
-        user.setFirstName(request.personal().firstName());
-        user.setLastName(request.personal().lastName());
-        user.setEmail(request.personal().email());
+        var user = mapper.mapFromRegistration(request);
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.system().password())));
         user.setGroups(List.of(KeyCloakConst.REGION.NCR.getGroupCode()));
-        user.setAttributes(
-                setFields(
-                        request.votingInfo().voterId(),
-                        request.personal().dob(),
-                        request.personal().middleName(),
-                        request.personal().gender()
-                )
-        );
         var response = realmResource.users().create(user);
         switch (response.getStatus()) {
             case 400 ->
@@ -70,22 +55,9 @@ public class ProfileService {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         var userOpt = getUserById(userId);
         if (userOpt.isEmpty()) throw new NotFoundException("Voter not found");
-        var user = userOpt.get();
-        user.setFirstName(request.personal().firstName());
-        user.setLastName(request.personal().lastName());
-        user.setEmail(request.personal().email());
-        Map<String, List<String>> fieldMap = setFields(
-                request.votingInfo().voterId(),
-                request.personal().dob(),
-                request.personal().middleName(),
-                request.personal().gender()
-        );
-        final var now = LocalDateTime.now();
-        fieldMap.put("lastUpdateDateTime", List.of(now.format(KeyCloakConst.formatter)));
-        user.setAttributes(fieldMap);
+        var user = mapper.mapFromUpdate(request);
         realmResource.users().get(userId).update(user);
     }
-
 
 
     public Optional<UserRepresentation> getUserById(String userId) {
@@ -104,17 +76,6 @@ public class ProfileService {
         passwordCredentials.setType(CredentialRepresentation.PASSWORD);
         passwordCredentials.setValue(password);
         return passwordCredentials;
-    }
-
-
-    private Map<String, List<String>> setFields(String voterId, LocalDate dob,
-                                                String middleName, String gender) {
-        Map<String, List<String>> fields = new HashMap<>();
-        fields.put("voterId", List.of(voterId));
-        fields.put("dob", List.of(dob.format(DateTimeFormatter.ISO_LOCAL_DATE)));
-        fields.put("middleName", List.of(middleName));
-        fields.put("gender", List.of(Gender.fromString(gender).name()));
-        return fields;
     }
 
 

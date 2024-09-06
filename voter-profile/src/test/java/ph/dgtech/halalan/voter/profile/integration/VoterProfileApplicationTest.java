@@ -20,7 +20,11 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
 
     @Test
     public void givenAuthenticatedUser_whenAccess_shouldReturnOK() {
-        given().auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t")).when().get(PATH).then().statusCode(HttpStatus.OK.value());
+        given()
+                .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .when()
+                .get(PATH).then()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -41,7 +45,11 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                 }
                 
                 """;
-        given(getRequestSpecification()).auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t")).body(json).when().put(PATH + "/").then().statusCode(HttpStatus.NO_CONTENT.value());
+        given(getRequestSpecification()).auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .body(json).when()
+                .put(PATH + "/")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
@@ -65,7 +73,14 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                      }
                    }
                 """;
-        given(getRequestSpecification()).auth().oauth2(getAccessTokenUsingClientCredentials()).body(json).when().post(PATH + "/halalan/register").then().statusCode(HttpStatus.CREATED.value()).log().ifValidationFails();
+        given(getRequestSpecification())
+                .auth().oauth2(getAccessTokenUsingClientCredentials())
+                .body(json)
+                .when()
+                .post(PATH + "/halalan/register")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .log().ifValidationFails();
     }
 
 
