@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import ph.dgtech.halalan.voter.profile.dto.ProfileQueryResponseDetails;
 import ph.dgtech.halalan.voter.profile.dto.ProfileUpdateRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationResponseDetails;
@@ -36,8 +37,8 @@ public class ProfileController {
 
 
     @GetMapping("/")
-    public String getUser(){
-        return "success";
+    public ProfileQueryResponseDetails getVoterProfile() {
+        return profileService.getVoterProfile();
     }
 
 

@@ -9,6 +9,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ph.dgtech.halalan.voter.profile.dto.ProfileQueryResponseDetails;
 import ph.dgtech.halalan.voter.profile.dto.ProfileUpdateRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationResponseDetails;
@@ -57,6 +58,14 @@ public class ProfileService {
         if (userOpt.isEmpty()) throw new NotFoundException("Voter not found");
         var user = mapper.mapFromUpdate(request);
         realmResource.users().get(userId).update(user);
+    }
+
+
+    public ProfileQueryResponseDetails getVoterProfile() {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        var userOpt = getUserById(userId);
+        if (userOpt.isEmpty()) throw new NotFoundException("Voter not found");
+        return mapper.mapToQueryResponse(userOpt.get());
     }
 
 

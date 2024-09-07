@@ -479,13 +479,22 @@
       "firstName": "Jane",
       "lastName": "Doe",
       "enabled": true,
+      "attributes": {
+        "middleName": ["Walker"],
+        "voterId": ["ID-0001"],
+        "gender": ["MALE"],
+        "dob": ["1993-01-01"]
+      },
       "credentials": [
         {
           "type": "password",
           "value": "s3cr3t"
         }
       ],
-      "realmRoles" : ["default-roles-halalan-voters","voter-role"],
+      "realmRoles": [
+        "default-roles-halalan-voters",
+        "voter-role"
+      ],
       "clientRoles": {
         "account": [
           "view-profile",
