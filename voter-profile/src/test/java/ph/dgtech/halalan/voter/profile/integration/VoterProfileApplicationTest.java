@@ -22,18 +22,18 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
     @Test
     public void givenAuthenticatedUser_whenAccess_shouldReturnOK() {
         given()
-                .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .auth().oauth2(getAccessToken("johnywalker@halalan-voters.com", "s3cr3t"))
                 .when()
                 .get(PATH).then()
                 .statusCode(HttpStatus.OK.value())
-                .body("personal.firstName", Matchers.equalTo("Jane"),
-                        "personal.middleName", Matchers.equalTo("Walker"),
-                        "personal.lastName", Matchers.equalTo("Doe"),
-                        "votingInfo.voterId", Matchers.equalTo("ID-0001"),
+                .body("personal.firstName", Matchers.equalTo("John"),
+                        "personal.middleName", Matchers.equalTo("Deep"),
+                        "personal.lastName", Matchers.equalTo("Walker"),
+                        "votingInfo.voterId", Matchers.equalTo("ID-0002"),
                         "personal.gender", Matchers.equalTo("M"),
-                        "personal.dob", Matchers.equalTo("1993-01-01"),
-                        "personal.email", Matchers.equalTo("jane.doe@halalan-voters.com"),
-                        "username", Matchers.equalTo("janedoe")
+                        "personal.dob", Matchers.equalTo("1993-01-02"),
+                        "personal.email", Matchers.equalTo("johnywalker@halalan-voters.com"),
+                        "username", Matchers.equalTo("johnywalker")
                         );
     }
 

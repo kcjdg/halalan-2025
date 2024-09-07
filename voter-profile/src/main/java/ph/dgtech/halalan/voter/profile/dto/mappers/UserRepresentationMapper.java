@@ -70,13 +70,13 @@ public interface UserRepresentationMapper {
     }
 
     BiFunction<String, Map<String, List<String>>, String> getSafeAttribute =
-            (attributeName, attributes) -> attributes.containsKey(attributeName) ?
+            (attributeName, attributes) ->
                     Optional.ofNullable(attributes)
-                        .map(attrs -> attrs.get(attributeName))  // Get the list of values for the attribute
-                        .filter(values -> !values.isEmpty())     // Ensure the list is not empty
-                        .map(List::getFirst)                    // Get the first value from the list
-                    .orElse(null) :
-                    null;
+                            .map(attrs -> attrs.containsKey(attributeName) ?
+                                    attributes.get(attributeName) : null)  // Get the list of values for the attribute
+                            .filter(values -> !values.isEmpty())     // Ensure the list is not empty
+                            .map(List::getFirst)                    // Get the first value from the list
+                            .orElse(null);
 
 
     default Map<String, List<String>> toAttributes(VotingInfo votingInfo, PersonalInfo personal) {
