@@ -4,6 +4,7 @@ package ph.dgtech.halalan.voting.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ph.dgtech.halalan.event.VoteCastEvent;
 import ph.dgtech.halalan.voting.dto.VoteRequestDto;
 import ph.dgtech.halalan.voting.dto.mappers.VoteCastMapper;
 import ph.dgtech.halalan.voting.repository.ElectionVoteRepository;
@@ -19,6 +20,9 @@ public class CastVotingService {
         var electionVote = mapper.mapToElectionVote(voteRequest);
         electionVote.setVoteId(voterId);
         electionVoteRepository.save(electionVote);
+
+        //TODO: send the message to kafka
+        VoteCastEvent voteCastEvent = new VoteCastEvent();
     }
 
 }
