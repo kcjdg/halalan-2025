@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.voter.profile.config;
+package ph.dgtech.halalan.voting.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Voter Profile API",
-                description = "Voter Profile API documentation",
+                title = "Voting Service API",
+                description = "Voting Service documentation",
                 version = "1.0"
         ),
         security = @SecurityRequirement(name = "oauth2_bearer"),
