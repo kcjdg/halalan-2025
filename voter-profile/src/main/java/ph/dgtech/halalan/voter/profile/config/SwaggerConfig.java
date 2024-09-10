@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Product Service API",
-                description = "Product API documentation",
+                title = "Voter Profile API",
+                description = "Voter Profile API documentation",
                 version = "1.0"
         ),
         security = @SecurityRequirement(name = "oauth2_bearer"),
