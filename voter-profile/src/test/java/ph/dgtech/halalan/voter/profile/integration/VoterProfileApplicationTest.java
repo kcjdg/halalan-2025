@@ -1,6 +1,7 @@
 package ph.dgtech.halalan.voter.profile.integration;
 
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,21 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
     @Test
     public void givenAuthenticatedUser_whenAccess_shouldReturnOK() {
         given()
-                .auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
+                .auth().oauth2(getAccessToken("johnywalker@halalan-voters.com", "s3cr3t"))
                 .when()
                 .get(PATH).then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("personal.firstName", Matchers.equalTo("John"),
+                        "personal.middleName", Matchers.equalTo("Deep"),
+                        "personal.lastName", Matchers.equalTo("Walker"),
+                        "votingInfo.voterId", Matchers.equalTo("ID-0002"),
+                        "personal.gender", Matchers.equalTo("M"),
+                        "personal.dob", Matchers.equalTo("1993-01-02"),
+                        "personal.email", Matchers.equalTo("johnywalker@halalan-voters.com"),
+                        "username", Matchers.equalTo("johnywalker")
+                        );
     }
+
 
     @Test
     public void givenUser_whenUpdated_shouldReturnNoContent() {
@@ -33,7 +44,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                 {
                    "personal": {
                    "firstName": "Jane",
-                    "middleName": "deep",
+                    "middleName": "Deep",
                     "lastName": "Doe",
                     "email": "jane.doe@halalan-voters.com",
                     "dob": "1993-01-01",
