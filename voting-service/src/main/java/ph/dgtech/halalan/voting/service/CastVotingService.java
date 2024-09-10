@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.voting.dto.VoteRequestDto;
 import ph.dgtech.halalan.voting.dto.mappers.VoteCastMapper;
-import ph.dgtech.halalan.voting.model.CandidatePosition;
 import ph.dgtech.halalan.voting.repository.ElectionVoteRepository;
 
 @Service
@@ -16,9 +15,11 @@ public class CastVotingService {
     private final ElectionVoteRepository electionVoteRepository;
     private final VoteCastMapper mapper;
 
-    public void castVote(VoteRequestDto voteRequest) {
+    public void castVote(String voterId, VoteRequestDto voteRequest) {
         var electionVote = mapper.mapToElectionVote(voteRequest);
+        electionVote.setVoteId(voterId);
         electionVoteRepository.save(electionVote);
     }
 
 }
+
