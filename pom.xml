@@ -22,7 +22,7 @@
         <module>polling-service</module>
         <module>result-aggregation</module>
         <module>voter-profile</module>
-        <module>vote-collection</module>
+        <module>voting-service</module>
     </modules>
 
     <properties>
