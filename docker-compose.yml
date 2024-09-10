@@ -28,3 +28,14 @@ services:
       - ./docker/keycloak/realms/:/opt/keycloak/data/import/
     depends_on:
       - keycloak-mysql
+  mongodb:
+    image: mongo:7.0.5
+    container_name: halalan-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: voting-service
+    volumes:
+      - ./data:/data/db
