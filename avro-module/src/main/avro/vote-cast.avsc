@@ -1,31 +1,33 @@
 {
   "type": "record",
-    "name": "VoteCastEvent",
-    "namespace": "ph.dgtech.halalan.event",
-    "fields": [
-      {
-        "name": "voterId",
-        "type": "string"
-      },
-      {
-        "name": "electionId",
-        "type": "string"
-      },
-      {
-        "name": "pollingStationId",
-        "type": "string"
-      },
-      {
-        "name": "deviceId",
-        "type": "string"
-      },
-      {
-        "name": "geoLocation",
-        "type": "string"
-      },
-      {
-        "name": "votedCandidates",
-        "type": {
+  "name": "VoteCastEvent",
+  "namespace": "ph.dgtech.halalan.event",
+  "fields": [
+    {
+      "name": "voterId",
+      "type": "string"
+    },
+    {
+      "name": "electionId",
+      "type": "string"
+    },
+    {
+      "name": "pollingStationId",
+      "type": "string"
+    },
+    {
+      "name": "deviceId",
+      "type": "string"
+    },
+    {
+      "name": "geoLocation",
+      "type": "string"
+    },
+    {
+      "name": "votedCandidates",
+      "type": {
+        "type": "array",
+        "items": {
           "type": "record",
           "name": "Candidate",
           "fields": [
@@ -40,5 +42,6 @@
           ]
         }
       }
-    ]
+    }
+  ]
 }

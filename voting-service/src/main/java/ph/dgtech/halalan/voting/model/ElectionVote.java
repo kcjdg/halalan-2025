@@ -26,7 +26,7 @@ public class ElectionVote {
     Boolean isValid;
     String pollingStationId;
     String deviceId;
-    String geolocation;
+    String geoLocation;
     String language;
     List<CandidatePosition> votedCandidates;
 }

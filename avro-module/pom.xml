@@ -21,6 +21,7 @@
         <artifactId>avro</artifactId>
         <version>1.11.3</version>
     </dependency>
+
 </dependencies>
     <build>
         <plugins>
@@ -43,4 +44,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
