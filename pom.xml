@@ -23,6 +23,7 @@
         <module>result-aggregation</module>
         <module>voter-profile</module>
         <module>voting-service</module>
+        <module>avro-module</module>
     </modules>
 
     <properties>
@@ -38,6 +39,7 @@
         <testcontainers-keycloak.version>3.4.0</testcontainers-keycloak.version>
         <rest-assured.version>5.4.0</rest-assured.version>
         <org.mapstruct.extensions.spring.version>1.1.2</org.mapstruct.extensions.spring.version>
+        <avro-module.version>1.0-SNAPSHOT</avro-module.version>
 
     </properties>
     <dependencyManagement>
@@ -152,6 +154,12 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+                <!-- Only manage plugin versions here, not configurations -->
+                <plugin>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro-maven-plugin</artifactId>
+                    <version>1.11.1</version>
+                </plugin>
         </plugins>
     </build>
 </project>

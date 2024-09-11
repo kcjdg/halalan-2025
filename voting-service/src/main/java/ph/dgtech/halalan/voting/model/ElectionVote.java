@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,11 +21,12 @@ public class ElectionVote {
     String voteId;
     String voterId;
     String electionId;
+    @CreatedDate
     LocalDateTime voteDateTime;
     Boolean isValid;
     String pollingStationId;
     String deviceId;
-    String geolocation;
+    String geoLocation;
     String language;
     List<CandidatePosition> votedCandidates;
 }
