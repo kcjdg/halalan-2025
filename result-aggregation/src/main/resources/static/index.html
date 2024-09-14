@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spring Boot WebSocket Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div id="vote-container">
+    <div id="vote-updates"></div>
+</div>
+
+<script>
+    var stompClient = null;
+
+    function connect() {
+        var socket = new SockJS('/result-aggregation/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/vote-results', function(message) {
+                showMessage(JSON.parse(message.body));
+            });
+        }, function(error) {
+            console.error('STOMP error:', error);
+        });
+    }
+
+
+    function showMessage(message) {
+    var response = document.getElementById("vote-updates");
+    response.innerHTML = "";
+    for (const key in message) {
+          if (message.hasOwnProperty(key)) {
+               var p = document.createElement("p");
+               p.appendChild(document.createTextNode(`${key}: ${message[key]}`));
+               response.appendChild(p);
+          }
+       }
+    }
+
+    connect();
+</script>
+</body>
+</html>
