@@ -19,7 +19,7 @@ public class Candidate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String candidateId;
 
     private String firstName;
     private String middleName;
@@ -28,7 +28,7 @@ public class Candidate {
     private String gender;
     private String photo;
 
-    private UUID electionId;
+    private String electionId;
     private String officeTitle;
     private String politicalParty;
     private Integer ballotNumber;
