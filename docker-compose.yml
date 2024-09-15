@@ -39,6 +39,17 @@ services:
       MONGO_INITDB_DATABASE: voting-service
     volumes:
       - ./data:/data/db
+  mysql:
+    image: mysql:8.3.0
+    container_name: halalan-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+    volumes:
+      - ./data:/var/lib/halalan-mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     hostname: zookeeper
