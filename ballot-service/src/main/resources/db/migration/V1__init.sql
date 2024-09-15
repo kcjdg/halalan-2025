@@ -1,5 +1,5 @@
 CREATE TABLE t_candidates (
-    candidate_id CHAR(36) NOT NULL,  -- UUID as a string
+    candidate_id VARCHAR(36) NOT NULL,  -- UUID as a string
     first_name VARCHAR(100) NOT NULL,
     middle_name VARCHAR(100),
     last_name VARCHAR(100) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE t_candidates (
     gender VARCHAR(10),
     photo VARCHAR(255),
 
-    election_id CHAR(36) NOT NULL,
+    election_id VARCHAR(36) NOT NULL,
     office_title VARCHAR(100),
     political_party VARCHAR(100),
     ballot_number INT,
