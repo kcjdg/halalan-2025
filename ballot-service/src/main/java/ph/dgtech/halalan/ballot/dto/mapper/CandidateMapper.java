@@ -1,12 +1,15 @@
 package ph.dgtech.halalan.ballot.dto.mapper;
 
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 import ph.dgtech.halalan.ballot.dto.CandidateReqDto;
 import ph.dgtech.halalan.ballot.model.Candidate;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CandidateMapper {
 
-    public Candidate toEntity(CandidateReqDto request);
+     Candidate toEntity(CandidateReqDto request);
+
+     void updateCandidateFromDto(CandidateReqDto dto, @MappingTarget Candidate entity);
+
 
 }

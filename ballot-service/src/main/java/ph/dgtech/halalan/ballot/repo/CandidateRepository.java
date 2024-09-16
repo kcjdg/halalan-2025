@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ph.dgtech.halalan.ballot.model.Candidate;
 
 @Repository
-public interface CandidateRepository extends JpaRepository<Candidate, Long> {
+public interface CandidateRepository extends JpaRepository<Candidate, String> {
 }
