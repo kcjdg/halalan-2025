@@ -1,9 +1,13 @@
 package ph.dgtech.halalan.ballot.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record CandidateReqDto(
+public record CandidateDto(
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        String candidateId,
         String firstName,
         String middleName,
         String lastName,

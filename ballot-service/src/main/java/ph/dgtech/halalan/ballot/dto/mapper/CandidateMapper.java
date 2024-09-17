@@ -1,15 +1,18 @@
 package ph.dgtech.halalan.ballot.dto.mapper;
 
 import org.mapstruct.*;
-import ph.dgtech.halalan.ballot.dto.CandidateReqDto;
+import ph.dgtech.halalan.ballot.dto.CandidateDto;
 import ph.dgtech.halalan.ballot.model.Candidate;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CandidateMapper {
 
-     Candidate toEntity(CandidateReqDto request);
+     Candidate toEntity(CandidateDto request);
 
-     void updateCandidateFromDto(CandidateReqDto dto, @MappingTarget Candidate entity);
+     void updateCandidateFromDto(CandidateDto dto, @MappingTarget Candidate entity);
 
+     List<CandidateDto> mapToList (List<Candidate> candidates);
 
 }
