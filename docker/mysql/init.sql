@@ -1,1 +1,2 @@
 CREATE DATABASE IF NOT EXISTS ballot_service;
+CREATE DATABASE IF NOT EXISTS polling_service;
