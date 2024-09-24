@@ -1,0 +1,31 @@
+type Region {
+    regionId: ID!
+    regionName: String!
+    regionDescription: String
+}
+
+type Province {
+    provinceId: ID!
+    provinceName: String!
+    region: Region!
+}
+
+type Municipality {
+    municipalityId: ID!
+    municipalityName: String!
+    province: Province!
+}
+
+type Barangay {
+    barangayId: ID!
+    barangayName: String!
+    municipality: Municipality!
+}
+
+type Query {
+    allRegions: [Region]
+    regionById(regionId: ID!): Region
+    provincesByRegion(regionId: ID!): [Province]
+    municipalitiesByProvince(provinceId: ID!): [Municipality]
+    barangaysByMunicipality(municipalityId: ID!): [Barangay]
+}
