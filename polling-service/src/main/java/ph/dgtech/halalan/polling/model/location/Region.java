@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_province")
+@Table(name = "t_region")
 @Data
 public class Region {
     @Id
