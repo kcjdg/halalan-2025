@@ -1,4 +1,4 @@
 package ph.dgtech.halalan.polling.dto.location;
 
-public record MunicipalityDto(Long muinicpalityId, String municipalityName, ProvinceDto province) {
+public record MunicipalityDto(Long municipalityId, String municipalityName, ProvinceDto province) {
 }
