@@ -9,8 +9,6 @@ import ph.dgtech.halalan.polling.dto.location.BarangayDto;
 import ph.dgtech.halalan.polling.dto.location.MunicipalityDto;
 import ph.dgtech.halalan.polling.dto.location.ProvinceDto;
 import ph.dgtech.halalan.polling.dto.location.RegionDto;
-import ph.dgtech.halalan.polling.model.location.Barangay;
-import ph.dgtech.halalan.polling.model.location.Municipality;
 import ph.dgtech.halalan.polling.service.LocationGraphQLService;
 
 import java.util.List;

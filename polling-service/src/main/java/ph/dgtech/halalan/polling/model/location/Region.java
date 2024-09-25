@@ -2,6 +2,7 @@ package ph.dgtech.halalan.polling.model.location;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ph.dgtech.halalan.polling.dto.AddressDetails;
 
 import java.util.Set;
 
