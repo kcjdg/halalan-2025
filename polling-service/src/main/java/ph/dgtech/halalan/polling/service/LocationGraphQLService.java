@@ -4,6 +4,7 @@ package ph.dgtech.halalan.polling.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ph.dgtech.halalan.polling.dto.location.BarangayDto;
 import ph.dgtech.halalan.polling.dto.location.MunicipalityDto;
 import ph.dgtech.halalan.polling.dto.location.ProvinceDto;
 import ph.dgtech.halalan.polling.dto.location.RegionDto;
@@ -54,10 +55,10 @@ public class LocationGraphQLService {
     }
 
 
-
-    public List<Barangay> getBarangaysByMunicipality(Long municipalityId) {
-        return barangayRepository
+    public List<BarangayDto> getBarangaysByMunicipality(Long municipalityId) {
+        var barangayList =  barangayRepository
                 .findByMunicipalityId(municipalityId);
+        return locMapper.toBarangayDto(barangayList);
     }
 
 

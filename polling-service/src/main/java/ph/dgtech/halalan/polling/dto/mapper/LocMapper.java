@@ -3,9 +3,11 @@ package ph.dgtech.halalan.polling.dto.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import ph.dgtech.halalan.polling.dto.location.BarangayDto;
 import ph.dgtech.halalan.polling.dto.location.MunicipalityDto;
 import ph.dgtech.halalan.polling.dto.location.ProvinceDto;
 import ph.dgtech.halalan.polling.dto.location.RegionDto;
+import ph.dgtech.halalan.polling.model.location.Barangay;
 import ph.dgtech.halalan.polling.model.location.Municipality;
 import ph.dgtech.halalan.polling.model.location.Province;
 import ph.dgtech.halalan.polling.model.location.Region;
@@ -38,5 +40,14 @@ public interface LocMapper {
     MunicipalityDto toMunicipalityDto(Municipality municipality);
 
     List<MunicipalityDto> toMunicipalityDto(List<Municipality> municipalities);
+
+
+    @Mapping(target = "barangayId", source = "id")
+    @Mapping(target = "barangayName", source = "name")
+    @Mapping(target = "municipality", source = "municipality")
+    BarangayDto toBarangayDto(Barangay barangay);
+
+    List<BarangayDto> toBarangayDto(List<Barangay> municipalities);
+
 
 }
