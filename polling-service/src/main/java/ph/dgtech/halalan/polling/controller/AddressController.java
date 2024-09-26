@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ph.dgtech.halalan.polling.dto.AddressRequest;
-import ph.dgtech.halalan.polling.dto.ApiResponse;
-import ph.dgtech.halalan.polling.dto.ErrorResponse;
-import ph.dgtech.halalan.polling.dto.SuccessResponse;
+import ph.dgtech.halalan.polling.dto.address.AddressRequest;
+import ph.dgtech.halalan.polling.dto.api.ApiResponse;
+import ph.dgtech.halalan.polling.dto.api.ErrorResponse;
+import ph.dgtech.halalan.polling.dto.api.SuccessResponse;
 import ph.dgtech.halalan.polling.service.AddressValidationService;
 
 import java.util.List;
