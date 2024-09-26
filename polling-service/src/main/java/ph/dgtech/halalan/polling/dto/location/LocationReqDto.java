@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.polling.dto;
+package ph.dgtech.halalan.polling.dto.location;
 
 public record LocationReqDto(
         String municipality,

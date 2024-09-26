@@ -3,12 +3,11 @@ package ph.dgtech.halalan.polling.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ph.dgtech.halalan.polling.dto.location.BarangayDto;
+import ph.dgtech.halalan.polling.dto.location.MunicipalityDto;
 import ph.dgtech.halalan.polling.dto.location.ProvinceDto;
 import ph.dgtech.halalan.polling.dto.location.RegionDto;
 import ph.dgtech.halalan.polling.dto.mapper.LocMapper;
-import ph.dgtech.halalan.polling.model.location.Barangay;
-import ph.dgtech.halalan.polling.model.location.Municipality;
 import ph.dgtech.halalan.polling.repository.location.BarangayRepository;
 import ph.dgtech.halalan.polling.repository.location.MunicipalityRepository;
 import ph.dgtech.halalan.polling.repository.location.ProvinceRepository;
@@ -46,14 +45,17 @@ public class LocationGraphQLService {
     }
 
 
-    public List<Municipality> getMunicipalitiesByProvince(Long provinceId) {
-        return municipalityRepository
+    public List<MunicipalityDto> getMunicipalitiesByProvince(Long provinceId) {
+        var municipalityList =  municipalityRepository
                 .findAllByProvinceId(provinceId);
+        return locMapper.toMunicipalityDto(municipalityList);
     }
 
-    public List<Barangay> getBarangaysByMunicipality(Long municipalityId) {
-        return barangayRepository
+
+    public List<BarangayDto> getBarangaysByMunicipality(Long municipalityId) {
+        var barangayList =  barangayRepository
                 .findByMunicipalityId(municipalityId);
+        return locMapper.toBarangayDto(barangayList);
     }
 
 
