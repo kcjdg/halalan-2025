@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.polling.dto;
+package ph.dgtech.halalan.polling.dto.address;
 
 public record AddressRequest(
         String region,

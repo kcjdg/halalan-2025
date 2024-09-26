@@ -1,6 +1,4 @@
-package ph.dgtech.halalan.polling.dto;
-
-import jakarta.persistence.ColumnResult;
+package ph.dgtech.halalan.polling.dto.address;
 
 public record AddressDetails(
         String region,
