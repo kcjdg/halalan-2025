@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="ENCODING" value="UTF-8" />
+	<property name="LOG_LEVEL" value="DEBUG" />
+	<springProperty scope="context" name="appName" source="spring.application.name" />
+
+	<!-- Reuse base configuration and defaults -->
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+	<!-- Define custom console appender -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender" >
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>${ENCODING}</charset>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+	</root>
+</configuration>
