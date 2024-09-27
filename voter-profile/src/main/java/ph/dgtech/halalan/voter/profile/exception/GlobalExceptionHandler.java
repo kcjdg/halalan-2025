@@ -29,7 +29,6 @@ public class GlobalExceptionHandler {
     }
 
 
-
     @ExceptionHandler(UserAlreadyExistException.class)
     public ResponseEntity<ErrorDto> handleUserAlreadyExistsException(UserAlreadyExistException ex, WebRequest request) {
         String message = ex.getMessage();
@@ -43,7 +42,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidRequestFormatException.class)
     public ResponseEntity<ErrorDto> handlInvalidRequest(InvalidRequestFormatException ex, WebRequest request) {
         String message = ex.getMessage();
-        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST.toString(), "Bad request", "", List.of(ex.getDetail()));
+        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST.toString(), "Bad request", ex.getMessage(), List.of(ex.getDetail()));
         log.warn(ERROR_LOG_FORMAT, this.getServletPath(request), 400, message);
         log.debug(ex.toString());
         return ResponseEntity.badRequest().body(error);
@@ -71,6 +70,18 @@ public class GlobalExceptionHandler {
         ErrorDto errorVm = new ErrorDto(HttpStatus.BAD_REQUEST.toString(),
                 HttpStatus.BAD_REQUEST.getReasonPhrase(), "Request information is not valid", errors);
         return ResponseEntity.badRequest().body(errorVm);
+    }
+
+
+
+    @ExceptionHandler(InternalClientException.class)
+    public ResponseEntity<ErrorDto> internalClient(InternalClientException ex, WebRequest request) {
+        String message = ex.getMessage();
+        ErrorDto errorVm = new ErrorDto(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), ex.getMessage(), List.of(ex.getDetail()));
+        log.warn(ERROR_LOG_FORMAT, this.getServletPath(request), 500, message);
+        log.debug(ex.toString());
+        return new ResponseEntity<>(errorVm, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
