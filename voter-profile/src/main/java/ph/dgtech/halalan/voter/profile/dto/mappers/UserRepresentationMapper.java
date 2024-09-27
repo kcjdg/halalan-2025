@@ -92,7 +92,6 @@ public interface UserRepresentationMapper {
 
 
     default Map<String, List<String>> toAttributes(VotingInfo votingInfo, PersonalInfo personal, AddressInfo address) {
-        System.out.println("qerty " + address);
         return Map.of(
                 "voterId", List.of(votingInfo.voterId()),
                 "dob", List.of(personal.dob().format(DateTimeFormatter.ISO_LOCAL_DATE)),
