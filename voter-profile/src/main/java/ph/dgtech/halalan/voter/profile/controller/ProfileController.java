@@ -20,6 +20,7 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
+
     @PostMapping("/halalan/register")
     @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDetails register(@Valid @RequestBody RegistrationRequestDetails request) {
