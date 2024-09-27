@@ -6,13 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ph.dgtech.halalan.voter.profile.client.AddressClient;
 import ph.dgtech.halalan.voter.profile.dto.ProfileQueryResponseDetails;
 import ph.dgtech.halalan.voter.profile.dto.ProfileUpdateRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationResponseDetails;
+import ph.dgtech.halalan.voter.profile.dto.info.AddressInfo;
 import ph.dgtech.halalan.voter.profile.dto.mappers.UserRepresentationMapper;
 import ph.dgtech.halalan.voter.profile.exception.InvalidRequestFormatException;
 import ph.dgtech.halalan.voter.profile.exception.NotFoundException;
@@ -32,14 +35,15 @@ public class ProfileService {
 
     private final RealmResource realmResource;
     private final UserRepresentationMapper mapper;
+    private final AddressClient addressClient;
 
     @SneakyThrows
     public RegistrationResponseDetails registerVoter(RegistrationRequestDetails request) {
         var user = mapper.mapFromRegistration(request);
-        System.out.println("qwerty " + user);
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.system().password())));
         user.setGroups(List.of(KeyCloakConst.REGION.NCR.getGroupCode()));
+        validateAddress(request.address());
         var response = realmResource.users().create(user);
         switch (response.getStatus()) {
             case 400 ->
@@ -49,7 +53,6 @@ public class ProfileService {
             case 201 -> log.info("User created successfully");
             default -> throw new RuntimeException("Failed to create user");
         }
-
         return new RegistrationResponseDetails(getUserId(response.getLocation()), request.system().username(), request.votingInfo().voterId(), request.personal().firstName(), request.personal().lastName());
     }
 
@@ -58,6 +61,7 @@ public class ProfileService {
         var userOpt = getUserById(userId);
         if (userOpt.isEmpty()) throw new NotFoundException("Voter not found");
         var user = mapper.mapFromUpdate(request);
+        validateAddress(request.address());
         realmResource.users().get(userId).update(user);
     }
 
@@ -91,6 +95,16 @@ public class ProfileService {
 
     private String getUserId(URI location) {
         return location.getPath().replaceAll(".*/([^/]+)$", "$1");
+    }
+
+    private void validateAddress(AddressInfo addressInfo){
+        var addressResp = addressClient.validateAddress(addressInfo);
+        if (addressResp.getStatusCode().equals(HttpStatus.OK)) {
+            log.info("Address validated successfully");
+            return;
+        }
+        log.error("Failed to validate address");
+        throw new NotFoundException("Not a valid address");
     }
 
 
