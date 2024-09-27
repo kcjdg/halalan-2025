@@ -36,6 +36,7 @@ public class ProfileService {
     @SneakyThrows
     public RegistrationResponseDetails registerVoter(RegistrationRequestDetails request) {
         var user = mapper.mapFromRegistration(request);
+        System.out.println("qwerty " + user);
         user.setEnabled(true);
         user.setCredentials(Collections.singletonList(createPasswordCredentials(request.system().password())));
         user.setGroups(List.of(KeyCloakConst.REGION.NCR.getGroupCode()));
