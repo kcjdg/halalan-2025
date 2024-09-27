@@ -18,8 +18,8 @@ public interface AddressClient {
     @Retry(name = "addressValidation")
     ResponseEntity<?> validateAddress(@RequestBody AddressInfo request);
 
-    default ResponseEntity<?> fallBackMethod(String userId, AddressInfo details, Throwable throwable) {
-        log.info("Cannot validate user {} with address of {} failure reason {}", userId, details, throwable.getMessage());
-        return null;
+    default ResponseEntity<?> fallBackMethod(AddressInfo details, Throwable throwable) {
+        log.info("Cannot validate user with address of {} failure reason {}",  details, throwable.getMessage());
+        return ResponseEntity.internalServerError().body("Cannot validate address");
     }
 }

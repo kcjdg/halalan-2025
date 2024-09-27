@@ -1,7 +1,6 @@
 package ph.dgtech.halalan.voter.profile.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -17,6 +16,7 @@ import ph.dgtech.halalan.voter.profile.dto.RegistrationRequestDetails;
 import ph.dgtech.halalan.voter.profile.dto.RegistrationResponseDetails;
 import ph.dgtech.halalan.voter.profile.dto.info.AddressInfo;
 import ph.dgtech.halalan.voter.profile.dto.mappers.UserRepresentationMapper;
+import ph.dgtech.halalan.voter.profile.exception.InternalClientException;
 import ph.dgtech.halalan.voter.profile.exception.InvalidRequestFormatException;
 import ph.dgtech.halalan.voter.profile.exception.NotFoundException;
 import ph.dgtech.halalan.voter.profile.exception.UserAlreadyExistException;
@@ -37,7 +37,6 @@ public class ProfileService {
     private final UserRepresentationMapper mapper;
     private final AddressClient addressClient;
 
-    @SneakyThrows
     public RegistrationResponseDetails registerVoter(RegistrationRequestDetails request) {
         var user = mapper.mapFromRegistration(request);
         user.setEnabled(true);
@@ -99,13 +98,13 @@ public class ProfileService {
 
     private void validateAddress(AddressInfo addressInfo){
         var addressResp = addressClient.validateAddress(addressInfo);
-        if (addressResp.getStatusCode().equals(HttpStatus.OK)) {
-            log.info("Address validated successfully");
-            return;
+        switch (addressResp.getStatusCode()){
+            case HttpStatus.OK -> log.info("Address validated successfully");
+            case HttpStatus.INTERNAL_SERVER_ERROR ->
+                throw new InternalClientException("Cannot verify address. Try again", addressInfo);
+            default ->
+                throw new InvalidRequestFormatException("Not a valid Address", addressInfo);
         }
-        log.error("Failed to validate address");
-        throw new NotFoundException("Not a valid address");
     }
-
 
 }
