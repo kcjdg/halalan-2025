@@ -16,6 +16,7 @@ import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 
 import java.util.Map;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
 

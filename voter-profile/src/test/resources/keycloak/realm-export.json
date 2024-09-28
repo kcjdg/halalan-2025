@@ -482,7 +482,11 @@
       "attributes": {
         "middleName": ["Walker"],
         "voterId": ["ID-0001"],
-        "dob": ["1993-01-01"]
+        "dob": ["1993-01-01"],
+        "region": "Region IV-A",
+        "province": "Laguna",
+        "municipality": "Calamba City",
+        "barangay": "Banlic"
       },
       "credentials": [
         {
@@ -511,7 +515,11 @@
         "middleName": ["Deep"],
         "voterId": ["ID-0002"],
         "dob": ["1993-01-02"],
-        "gender": "MALE"
+        "gender": "MALE",
+        "region": "Region IV-A",
+        "province": "Laguna",
+        "municipality": "Calamba City",
+        "barangay": "Banlic"
       },
       "credentials": [
         {
