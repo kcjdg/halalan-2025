@@ -4,12 +4,16 @@ package ph.dgtech.halalan.voter.profile.integration;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
+import ph.dgtech.halalan.voter.profile.dto.info.AddressInfo;
 import ph.dgtech.halalan.voter.profile.integration.config.KeyCloakTestContainers;
+import ph.dgtech.halalan.voter.profile.integration.stubs.AddressClientStub;
 
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWireMock(port = 0)
 public class VoterProfileApplicationTest extends KeyCloakTestContainers {
 
     private static final String PATH = "/v1";
@@ -33,13 +37,24 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                         "personal.gender", Matchers.equalTo("M"),
                         "personal.dob", Matchers.equalTo("1993-01-02"),
                         "personal.email", Matchers.equalTo("johnywalker@halalan-voters.com"),
+                        "address.region", Matchers.equalTo("Region IV-A"),
+                        "address.province", Matchers.equalTo("Laguna"),
+                        "address.municipality", Matchers.equalTo("Calamba City"),
+                        "address.barangay", Matchers.equalTo("Banlic"),
                         "username", Matchers.equalTo("johnywalker")
                         );
     }
 
 
     @Test
-    public void givenUser_whenUpdated_shouldReturnNoContent() {
+    public void givenUpdatedUserDetails_whenPutMethodCalled_shouldReturnNoContent() {
+        /**
+         * Updated user details
+         * middleName: Deep
+         * gender: F
+         * address.barangay: Bucal
+         */
+        AddressInfo address = new AddressInfo( "Region IV-A", "Laguna", "Calamba City", "Bucal");
         String json = """
                 {
                    "personal": {
@@ -50,12 +65,19 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                     "dob": "1993-01-01",
                     "gender": "F"
                    },
+                    "address" : {
+                        "region": "%s",
+                        "province": "%s",
+                        "municipality":"%s",
+                        "barangay":"%s"
+                     },
                     "votingInfo": {
                     "voterId": "ID-0012"
                    }
                 }
-                
-                """;
+                """.formatted(address.region(), address.province(), address.municipality(), address.barangay());
+
+        AddressClientStub.stubValidateAddress(address);
         given(getRequestSpecification()).auth().oauth2(getAccessToken("jane.doe@halalan-voters.com", "s3cr3t"))
                 .body(json).when()
                 .put(PATH + "/")
@@ -65,7 +87,49 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
 
     @Test
     public void givenClientCredentials_whenRegister_shouldReturnCreatedStatus() {
-        String json = """
+        AddressInfo address = new AddressInfo( "Region IV-A", "Laguna", "Calamba City", "Bucal");
+        AddressClientStub.stubValidateAddress(address);
+        given(getRequestSpecification())
+                .auth().oauth2(getAccessTokenUsingClientCredentials())
+                .body(createJson(address))
+                .when()
+                .post(PATH + "/halalan/register")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .log().ifValidationFails();
+    }
+
+    @Test
+    public void givenIncorrectAddress_whenRegister_shouldReturnBadRequest() {
+        AddressInfo address = new AddressInfo( "RegionTest", "ProvinceTest", "CityTest", "BarangayTest"); //Incorrect Address
+        AddressClientStub.stubAddressNotFound(address);
+        given(getRequestSpecification())
+                .auth().oauth2(getAccessTokenUsingClientCredentials())
+                .body(createJson(address))
+                .when()
+                .post(PATH + "/halalan/register")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .log().ifValidationFails();
+    }
+
+
+    @Test
+    public void givenIncorrectAddress_whenRegisterAndServerUnavailable_shouldReturnInternalServerError() {
+        AddressInfo address = new AddressInfo( "Region IV-A", "Laguna", "Calamba City", "Bucal");
+        AddressClientStub.stubInternalServer(address);
+        given(getRequestSpecification())
+                .auth().oauth2(getAccessTokenUsingClientCredentials())
+                .body(createJson(address))
+                .when()
+                .post(PATH + "/halalan/register")
+                .then()
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .log().ifValidationFails();
+    }
+
+    private String createJson(AddressInfo address) {
+        return  """
                 {
                      "system": {
                        "username": "johnwill",
@@ -79,20 +143,17 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
                        "dob": "1993-01-01",
                        "gender": "M"
                      },
+                      "address" : {
+                        "region": "%s",
+                        "province": "%s",
+                        "municipality":"%s",
+                        "barangay":"%s"
+                     },
                      "votingInfo": {
                        "voterId": "ID-0011"
                      }
                    }
-                """;
-        given(getRequestSpecification())
-                .auth().oauth2(getAccessTokenUsingClientCredentials())
-                .body(json)
-                .when()
-                .post(PATH + "/halalan/register")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .log().ifValidationFails();
+                """.formatted(address.region(), address.province(), address.municipality(), address.barangay());
     }
-
 
 }
