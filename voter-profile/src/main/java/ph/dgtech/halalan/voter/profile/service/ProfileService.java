@@ -36,6 +36,7 @@ public class ProfileService {
     private final RealmResource realmResource;
     private final UserRepresentationMapper mapper;
     private final AddressClient addressClient;
+    private final BallotGenerationService ballotService;
 
     public RegistrationResponseDetails registerVoter(RegistrationRequestDetails request) {
         var user = mapper.mapFromRegistration(request);
@@ -52,7 +53,10 @@ public class ProfileService {
             case 201 -> log.info("User created successfully");
             default -> throw new RuntimeException("Failed to create user");
         }
-        return new RegistrationResponseDetails(getUserId(response.getLocation()), request.system().username(), request.votingInfo().voterId(), request.personal().firstName(), request.personal().lastName());
+
+        String userId = getUserId(response.getLocation());
+        ballotService.sendBallotDetails(userId, request.address());
+        return new RegistrationResponseDetails(userId, request.system().username(), request.votingInfo().voterId(), request.personal().firstName(), request.personal().lastName());
     }
 
     public void updateVoter(ProfileUpdateRequestDetails request) {
