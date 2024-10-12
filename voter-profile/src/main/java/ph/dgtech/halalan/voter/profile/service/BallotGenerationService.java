@@ -1,16 +1,12 @@
 package ph.dgtech.halalan.voter.profile.service;
 
 import groovy.util.logging.Slf4j;
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ph.dgtech.halalan.event.GenerateBallotEvent;
 import ph.dgtech.halalan.voter.profile.dto.info.AddressInfo;
-
-import javax.mail.Address;
 
 @Service
 @RequiredArgsConstructor
