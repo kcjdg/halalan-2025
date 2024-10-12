@@ -1,6 +1,7 @@
 package ph.dgtech.halalan.voter.profile.service;
 
 import groovy.util.logging.Slf4j;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,6 +22,7 @@ public class BallotGenerationService {
     @Transactional
     public void sendBallotDetails(String voterId, AddressInfo addressInfo){
         GenerateBallotEvent event = new GenerateBallotEvent();
+        event.setElectionId("2025");
         event.setBarangay(addressInfo.barangay());
         event.setMunicipality(addressInfo.municipality());
         event.setProvince(addressInfo.province());
