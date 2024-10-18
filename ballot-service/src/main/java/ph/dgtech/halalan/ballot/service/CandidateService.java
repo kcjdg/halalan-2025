@@ -10,8 +10,8 @@ import ph.dgtech.halalan.ballot.dto.CandidateDto;
 import ph.dgtech.halalan.ballot.dto.PageResponse;
 import ph.dgtech.halalan.ballot.dto.mapper.CandidateMapper;
 import ph.dgtech.halalan.ballot.exception.NotFoundException;
-import ph.dgtech.halalan.ballot.model.Candidate;
-import ph.dgtech.halalan.ballot.repo.CandidateRepository;
+import ph.dgtech.halalan.ballot.model.primary.Candidate;
+import ph.dgtech.halalan.ballot.repo.primary.CandidateRepository;
 
 import java.util.Optional;
 

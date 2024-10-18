@@ -1,8 +1,4 @@
-package ph.dgtech.halalan.ballot.model;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.*;
+package ph.dgtech.halalan.ballot.model.primary;
 
 //@Entity
 //@Table(name = "t_ballots")

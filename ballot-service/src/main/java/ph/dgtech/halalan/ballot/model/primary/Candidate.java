@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.ballot.model;
+package ph.dgtech.halalan.ballot.model.primary;
 
 import jakarta.persistence.*;
 import lombok.*;
