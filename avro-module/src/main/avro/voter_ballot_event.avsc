@@ -1,0 +1,31 @@
+{
+  "type": "record",
+  "name": "GenerateBallotEvent",
+  "namespace": "ph.dgtech.halalan.event",
+  "fields": [
+    {
+      "name": "voterId",
+      "type": "string"
+    },
+    {
+      "name": "electionId",
+      "type": "string"
+    },
+    {
+      "name": "region",
+      "type": "string"
+    },
+    {
+      "name": "province",
+      "type": "string"
+    },
+    {
+      "name": "municipality",
+      "type": "string"
+    },
+    {
+      "name": "barangay",
+      "type": "string"
+    }
+  ]
+}
