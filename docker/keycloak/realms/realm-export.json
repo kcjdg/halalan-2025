@@ -321,7 +321,7 @@
       "security-admin-console": [],
       "admin-cli": [],
       "halalan-voters-api": [],
-      "spring-microservice-client": [
+      "quarkus-service": [
         {
           "id": "2c7a270a-58af-47f9-9d8c-949b58c247f2",
           "name": "uma_protection",
@@ -371,57 +371,7 @@
       ]
     }
   },
-  "groups": [
-    {
-      "id": "6fa359d0-fe5d-428f-aebe-8865ba257408",
-      "name": "admin-group",
-      "path": "/admin-group",
-      "subGroups": [],
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {}
-    },
-    {
-      "id": "e8066adc-3d6b-431b-b523-ec2a226bcf50",
-      "name": "election-official-group",
-      "path": "/election-official-group",
-      "subGroups": [],
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {}
-    },
-    {
-      "id": "4f8ba7fd-c785-490e-b226-f5bf881f4e6a",
-      "name": "observer-group",
-      "path": "/observer-group",
-      "subGroups": [],
-      "attributes": {},
-      "realmRoles": [],
-      "clientRoles": {}
-    },
-    {
-      "id": "52d49a6c-c6cd-4744-a405-fd4a600494d1",
-      "name": "voter-group",
-      "path": "/voter-group",
-      "subGroups": [
-        {
-          "id": "254f743b-9264-4c3a-90cd-e83af1623e3b",
-          "name": "NCR",
-          "path": "/voter-group/NCR",
-          "parentId": "52d49a6c-c6cd-4744-a405-fd4a600494d1",
-          "subGroups": [],
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {}
-        }
-      ],
-      "attributes": {},
-      "realmRoles": [
-        "voter-role"
-      ],
-      "clientRoles": {}
-    }
-  ],
+  "groups": [],
   "defaultRole": {
     "id": "ae0de638-8b16-4d7f-9c1d-e1a55129f895",
     "name": "default-roles-halalan-voters",
@@ -479,58 +429,13 @@
       "firstName": "Jane",
       "lastName": "Doe",
       "enabled": true,
-      "attributes": {
-        "middleName": ["Walker"],
-        "voterId": ["ID-0001"],
-        "dob": ["1993-01-01"],
-        "region": "Region IV-A",
-        "province": "Laguna",
-        "municipality": "Calamba City",
-        "barangay": "Banlic"
-      },
       "credentials": [
         {
           "type": "password",
           "value": "s3cr3t"
         }
       ],
-      "realmRoles": [
-        "default-roles-halalan-voters",
-        "voter-role"
-      ],
-      "clientRoles": {
-        "account": [
-          "view-profile",
-          "manage-account"
-        ]
-      }
-    },
-    {
-      "username": "johnywalker",
-      "email": "johnywalker@halalan-voters.com",
-      "firstName": "John",
-      "lastName": "Walker",
-      "enabled": true,
-      "attributes": {
-        "middleName": ["Deep"],
-        "voterId": ["ID-0002"],
-        "dob": ["1993-01-02"],
-        "gender": "MALE",
-        "region": "Region IV-A",
-        "province": "Laguna",
-        "municipality": "Calamba City",
-        "barangay": "Banlic"
-      },
-      "credentials": [
-        {
-          "type": "password",
-          "value": "s3cr3t"
-        }
-      ],
-      "realmRoles": [
-        "default-roles-halalan-voters",
-        "voter-role"
-      ],
+      "realmRoles" : ["default-roles-halalan-voters","voter-role"],
       "clientRoles": {
         "account": [
           "view-profile",
@@ -540,12 +445,12 @@
     },
     {
       "id": "7da55740-b07e-4671-8456-3a03040e3a0d",
-      "username": "service-account-spring-microservice-client",
+      "username": "service-account-quarkus-service",
       "emailVerified": false,
       "createdTimestamp": 1725520940852,
       "enabled": true,
       "totp": false,
-      "serviceAccountClientId": "spring-microservice-client",
+      "serviceAccountClientId": "quarkus-service",
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
@@ -555,7 +460,7 @@
         "realm-management": [
           "manage-users"
         ],
-        "spring-microservice-client": [
+        "quarkus-service": [
           "uma_protection"
         ]
       },
@@ -820,12 +725,12 @@
     },
     {
       "id": "0d45cc52-f39d-4b4c-bb9b-cb3b8680e647",
-      "clientId": "spring-microservice-client",
+      "clientId": "quarkus-service",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "secret",
+      "secret": "**********",
       "redirectUris": [
         "/*"
       ],

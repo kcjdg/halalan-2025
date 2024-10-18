@@ -2,7 +2,7 @@ version: '4'
 services:
   keycloak-mysql:
     container_name: halalan-keycloak-mysql
-    image: mysql:8
+    image: mysql:8.3.0
     volumes:
       - ./volume-data/mysql_keycloak_data:/var/lib/mysql
     environment:
@@ -10,16 +10,28 @@ services:
       MYSQL_DATABASE: keycloak
       MYSQL_USER: keycloak
       MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    networks:
+      - halalan-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   keycloak:
     container_name: halalan-keycloak
     image: quay.io/keycloak/keycloak:25.0
-    command: [ "start-dev", "--import-realm" ]
+    command:
+      - start-dev
+      - --import-realm
     environment:
-      DB_VENDOR: MYSQL
-      DB_ADDR: mysql
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PASSWORD: password
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://halalan-keycloak-mysql:3306/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KC_HOSTNAME: localhost
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
@@ -28,6 +40,11 @@ services:
       - ./docker/keycloak/realms/:/opt/keycloak/data/import/
     depends_on:
       - keycloak-mysql
+    networks:
+      - halalan-network
+
+
+
   mongodb:
     image: mongo:7.0.5
     container_name: halalan-mongodb
@@ -99,3 +116,43 @@ services:
     depends_on:
       - broker
       - schema-registry
+
+  kafka-connect2:
+    image: confluentinc/cp-kafka-connect:latest
+    depends_on:
+      - broker
+      - keycloak-mysql
+    ports:
+      - 8083:8083
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: broker:29092
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: kafka-connect
+      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_LOG4J_LOGGERS: org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+    command:
+      - bash
+      - -c
+      - |
+        echo "Installing connector plugins"
+        confluent-hub install --no-prompt debezium/debezium-connector-mysql:latest
+        #
+        echo "Launching Kafka Connect worker"
+        /etc/confluent/docker/run
+
+networks:
+  halalan-network:
+    name: halalan-network
+    driver: bridge

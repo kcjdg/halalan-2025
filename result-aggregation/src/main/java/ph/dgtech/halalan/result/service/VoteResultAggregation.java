@@ -59,6 +59,8 @@ public class VoteResultAggregation {
                 .map(writeModel -> (WriteModel<Document>) writeModel)
                 .toList();
         collection.bulkWrite(list);
+
+        //TODO: put directly to Map instead of adding first in ArrayList
         List<Document> results = collection.find().into(new ArrayList<>());
 
         // Transform the results into a Map of candidateId -> total voteCount

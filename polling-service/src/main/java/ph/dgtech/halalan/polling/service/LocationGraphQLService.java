@@ -32,10 +32,10 @@ public class LocationGraphQLService {
     }
 
     public RegionDto getRegionById(Long regionId) {
-        var regionList = regionRepository
+        var region = regionRepository
                 .findById(regionId)
                 .orElseThrow(NotFoundException::new);
-        return locMapper.toRegionDto(regionList);
+        return locMapper.toRegionDto(region);
     }
 
     public List<ProvinceDto> getProvincesByRegion(Long regionId) {
