@@ -55,7 +55,7 @@ public class ProfileService {
         }
 
         String userId = getUserId(response.getLocation());
-        ballotService.sendBallotDetails(userId, request.address());
+//        ballotService.sendBallotDetails(userId, request.address());
         return new RegistrationResponseDetails(userId, request.system().username(), request.votingInfo().voterId(), request.personal().firstName(), request.personal().lastName());
     }
 
