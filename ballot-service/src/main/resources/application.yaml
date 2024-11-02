@@ -1,6 +1,9 @@
 server:
   port: 8093
 spring:
+  batch:
+    jdbc:
+      initialize-schema: always
   application:
     name: ballot-service
   servlet:
