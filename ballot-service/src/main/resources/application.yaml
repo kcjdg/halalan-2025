@@ -1,0 +1,41 @@
+server:
+  port: 8093
+spring:
+  batch:
+    jdbc:
+      initialize-schema: always
+  application:
+    name: ballot-service
+  servlet:
+    context-path: /ballot-service
+  flyway:
+    enabled: false
+
+  # First Database Configuration
+  first-datasource:
+    url: jdbc:mysql://localhost:3306/ballot_service
+    username: root
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+
+  # Second Database Configuration
+  second-datasource:
+    url: jdbc:mysql://localhost:3307/keycloak
+    username: keycloak
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect:
+          first: org.hibernate.dialect.MySQL8Dialect
+          second: org.hibernate.dialect.MySQL8Dialect

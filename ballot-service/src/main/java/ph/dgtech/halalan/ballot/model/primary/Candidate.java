@@ -1,8 +1,8 @@
-package ph.dgtech.halalan.ballot.model;
+package ph.dgtech.halalan.ballot.model.primary;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ph.dgtech.halalan.ballot.model.enums.CandidateStatus;
+import ph.dgtech.halalan.ballot.model.primary.enums.CandidateStatus;
 
 import java.time.LocalDate;
 

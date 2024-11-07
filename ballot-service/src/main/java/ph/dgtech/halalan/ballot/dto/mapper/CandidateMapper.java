@@ -2,7 +2,7 @@ package ph.dgtech.halalan.ballot.dto.mapper;
 
 import org.mapstruct.*;
 import ph.dgtech.halalan.ballot.dto.CandidateDto;
-import ph.dgtech.halalan.ballot.model.Candidate;
+import ph.dgtech.halalan.ballot.model.primary.Candidate;
 
 import java.util.List;
 
