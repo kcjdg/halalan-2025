@@ -25,7 +25,7 @@ public class Routes {
     @Bean
     public RouterFunction<ServerResponse> voterProfileService() {
         return GatewayRouterFunctions.route("voter-profile")
-                .route(RequestPredicates.path("/voter-profile/"), HandlerFunctions.http(voterProfileServiceUrl))
+                .route(RequestPredicates.path("/voter-profile/**"), HandlerFunctions.http(voterProfileServiceUrl))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("voterProfileFallBack",
                         URI.create("forward:/fallbackRoute")))
                 .build();

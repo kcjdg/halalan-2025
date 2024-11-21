@@ -22,17 +22,19 @@ import java.util.stream.Collectors;
 @Configuration
 public class SecurityConfig {
 
-    private final String[] freeResourceUrls = {"/actuator/prometheus", "/actuator/health/**",
-            "/swagger-ui", "/swagger-ui/**", "/error", "/v3/api-docs/**", "/voter-profile/halalan/register"};
-
-    private final String[] contextPath = {"/voter-profile/*"};
-
+    private final String[] freeResourceUrls = {
+            "/actuator/prometheus", "/actuator/health/**", //actuator
+            "/swagger-ui", "/swagger-ui/**", "/v3/api-docs/**",  //swagger
+            "/voter-profile/register", //voter profile service
+            "/error" //error
+    };
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(freeResourceUrls).permitAll()
-                        .requestMatchers(contextPath).hasRole("voter-role")
+                        .requestMatchers("/voter-profile/account").hasRole("voter-role")
+                        .requestMatchers("/voter-profile/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
