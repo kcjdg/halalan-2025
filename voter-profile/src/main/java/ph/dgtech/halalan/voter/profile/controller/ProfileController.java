@@ -21,7 +21,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
 
-    @PostMapping("/halalan/register")
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDetails register(@Valid @RequestBody RegistrationRequestDetails request) {
         log.info("registration request received: {}", request);
@@ -29,7 +29,7 @@ public class ProfileController {
     }
 
 
-    @PutMapping("/")
+    @PutMapping("/account")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody @Valid ProfileUpdateRequestDetails request) {
         log.info("update request received: {}", request);
@@ -37,7 +37,7 @@ public class ProfileController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/account")
     public ProfileQueryResponseDetails getVoterProfile() {
         return profileService.getVoterProfile();
     }
