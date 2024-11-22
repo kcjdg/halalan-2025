@@ -20,32 +20,32 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/prometheus", "/actuator/health/**",
-                                "/swagger-ui", "/swagger-ui/**", "/error", "/v3/api-docs/**")
-                        .permitAll()
-                        .requestMatchers("/vote").hasRole("voter-role")
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 ->  oauth2.jwt(Customizer.withDefaults()))
-                .build();
-    }
-
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
-        Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
-            Map<String, Collection<String>> realmAccess = jwt.getClaim("realm_access");
-            Collection<String> roles = realmAccess.get("roles");
-            return roles.stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                    .collect(Collectors.toList());
-        };
-
-        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
-    }
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        return http
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/actuator/prometheus", "/actuator/health/**",
+//                                "/swagger-ui", "/swagger-ui/**", "/error", "/v3/api-docs/**")
+//                        .permitAll()
+//                        .requestMatchers("/vote").hasRole("voter-role")
+//                        .anyRequest().authenticated())
+//                .oauth2ResourceServer(oauth2 ->  oauth2.jwt(Customizer.withDefaults()))
+//                .build();
+//    }
+//
+//    @Bean
+//    public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
+//        Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
+//            Map<String, Collection<String>> realmAccess = jwt.getClaim("realm_access");
+//            Collection<String> roles = realmAccess.get("roles");
+//            return roles.stream()
+//                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+//                    .collect(Collectors.toList());
+//        };
+//
+//        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
+//        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+//        return jwtAuthenticationConverter;
+//    }
 
 }
