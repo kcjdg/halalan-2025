@@ -29,11 +29,16 @@ public class SecurityConfig {
             "/error" //error
     };
 
+    private final String[] voterRoleUrls = {
+            "/voter-profile/account",
+            "/voting-service/vote"
+    };
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(freeResourceUrls).permitAll()
-                        .requestMatchers("/voter-profile/account").hasRole("voter-role")
+                        .requestMatchers(voterRoleUrls).hasRole("voter-role")
                         .requestMatchers("/voter-profile/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
