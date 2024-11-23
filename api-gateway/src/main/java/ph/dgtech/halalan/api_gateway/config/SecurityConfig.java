@@ -23,42 +23,22 @@ import java.util.stream.Collectors;
 public class SecurityConfig {
 
     private final String[] freeResourceUrls = {
-            "/actuator/prometheus", "/actuator/health/**", //actuator
-            "/swagger-ui", "/swagger-ui/**", "/v3/api-docs/**",  //swagger
-            "/voter-profile/register", //voter profile service
+            "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
+            "/swagger-resources/**", "/api-docs/**", "/aggregate/**", "/actuator/prometheus",
+            "/voter-profile/**",
             "/error" //error
     };
 
-    private final String[] voterRoleUrls = {
-            "/voter-profile/account",
-            "/voting-service/vote"
-    };
+
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(freeResourceUrls).permitAll()
-                        .requestMatchers(voterRoleUrls).hasRole("voter-role")
-                        .requestMatchers("/voter-profile/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
 
-    }
-
-    @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverterForKeycloak() {
-        Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
-            Map<String, Collection<String>> realmAccess = jwt.getClaim("realm_access");
-            Collection<String> roles = realmAccess.get("roles");
-            return roles.stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                    .collect(Collectors.toList());
-        };
-
-        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
     }
 
 
