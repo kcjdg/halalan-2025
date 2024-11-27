@@ -27,31 +27,27 @@ public class Routes {
 
 
     @Bean
-    public RouterFunction<ServerResponse> voterProfile() {
-        return GatewayRouterFunctions.route("voter-profile")
+    public RouterFunction<ServerResponse> votingFunction() {
+        return GatewayRouterFunctions
+                .route("voting")
                 .route(RequestPredicates.path("/voter-profile/**"), HandlerFunctions.http(voterProfileUrl))
-                .filter(CircuitBreakerFilterFunctions.circuitBreaker("voterProfileFallBack",
+                .route(RequestPredicates.path("/voting-service/**"), HandlerFunctions.http(votingServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("votingFallback",
                         URI.create("forward:/fallbackRoute")))
                 .build();
     }
 
     @Bean
-    public RouterFunction<ServerResponse> voterProfileSwagger() {
-        return GatewayRouterFunctions.route("voter-profile-swagger")
+    public RouterFunction<ServerResponse> votingSwagger() {
+        return GatewayRouterFunctions.route("votingSwagger")
                 .route(RequestPredicates.path("voter-profile/api-docs"), HandlerFunctions.http(voterProfileUrl))
-                .filter(CircuitBreakerFilterFunctions.circuitBreaker("voterProfileSwaggerFallback", URI.create("forward:/fallbackRoute")))
+                .route(RequestPredicates.path("voter-service/api-docs"), HandlerFunctions.http(votingServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("votingSwagger",
+                        URI.create("forward:/fallbackRoute")))
                 .filter(setPath("/api-docs"))
                 .build();
     }
 
-    @Bean
-    public RouterFunction<ServerResponse> votingService() {
-        return GatewayRouterFunctions.route("voting-service")
-                .route(RequestPredicates.path("/voting-service/**"), HandlerFunctions.http(votingServiceUrl))
-                .filter(CircuitBreakerFilterFunctions.circuitBreaker("voterProfileFallBack",
-                        URI.create("forward:/fallbackRoute")))
-                .build();
-    }
 
 
     @Bean
