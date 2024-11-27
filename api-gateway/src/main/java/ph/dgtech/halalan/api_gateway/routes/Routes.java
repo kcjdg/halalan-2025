@@ -25,6 +25,9 @@ public class Routes {
     @Value("${voting-service.url}")
     private String votingServiceUrl;
 
+    @Value("${polling-service.url}")
+    private String pollingServiceUrl;
+
 
     @Bean
     public RouterFunction<ServerResponse> votingFunction() {
@@ -32,6 +35,7 @@ public class Routes {
                 .route("voting")
                 .route(RequestPredicates.path("/voter-profile/**"), HandlerFunctions.http(voterProfileUrl))
                 .route(RequestPredicates.path("/voting-service/**"), HandlerFunctions.http(votingServiceUrl))
+                .route(RequestPredicates.path("/polling-service/**"), HandlerFunctions.http(pollingServiceUrl))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("votingFallback",
                         URI.create("forward:/fallbackRoute")))
                 .build();
@@ -42,6 +46,7 @@ public class Routes {
         return GatewayRouterFunctions.route("votingSwagger")
                 .route(RequestPredicates.path("voter-profile/api-docs"), HandlerFunctions.http(voterProfileUrl))
                 .route(RequestPredicates.path("voter-service/api-docs"), HandlerFunctions.http(votingServiceUrl))
+                .route(RequestPredicates.path("polling-service/v3/api-docs"), HandlerFunctions.http(pollingServiceUrl))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("votingSwagger",
                         URI.create("forward:/fallbackRoute")))
                 .filter(setPath("/api-docs"))

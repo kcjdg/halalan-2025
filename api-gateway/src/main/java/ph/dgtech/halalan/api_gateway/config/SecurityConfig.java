@@ -19,6 +19,7 @@ public class SecurityConfig {
             "/swagger-resources/**", "/api-docs/**", "/aggregate/**", "/actuator/prometheus",
             "/voter-profile/**",
             "/voting-service/**",
+            "/polling-service/**",
             "/error" //error
     };
 
@@ -34,13 +35,4 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    CorsConfigurationSource corsConfiguration() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.applyPermitDefaultValues();
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
 }
