@@ -28,6 +28,9 @@ public class Routes {
     @Value("${polling-service.url}")
     private String pollingServiceUrl;
 
+    @Value("${ballot-service.url}")
+    private String ballotServiceUrl;
+
 
     @Bean
     public RouterFunction<ServerResponse> votingFunction() {
@@ -45,7 +48,7 @@ public class Routes {
     public RouterFunction<ServerResponse> votingSwagger() {
         return GatewayRouterFunctions.route("votingSwagger")
                 .route(RequestPredicates.path("voter-profile/api-docs"), HandlerFunctions.http(voterProfileUrl))
-                .route(RequestPredicates.path("voter-service/api-docs"), HandlerFunctions.http(votingServiceUrl))
+                .route(RequestPredicates.path("voting-service/api-docs"), HandlerFunctions.http(votingServiceUrl))
                 .route(RequestPredicates.path("polling-service/v3/api-docs"), HandlerFunctions.http(pollingServiceUrl))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("votingSwagger",
                         URI.create("forward:/fallbackRoute")))
@@ -53,6 +56,25 @@ public class Routes {
                 .build();
     }
 
+    @Bean
+    public RouterFunction<ServerResponse> ballotFunction() {
+        return GatewayRouterFunctions
+                .route("ballot")
+                .route(RequestPredicates.path("/ballot-service/**"), HandlerFunctions.http(ballotServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("ballotFallback",
+                        URI.create("forward:/fallbackRoute")))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> ballotSwagger() {
+        return GatewayRouterFunctions.route("ballotSwagger")
+                .route(RequestPredicates.path("ballot-service/v3/api-docs"), HandlerFunctions.http(pollingServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("ballotSwagger",
+                        URI.create("forward:/fallbackRoute")))
+                .filter(setPath("/api-docs"))
+                .build();
+    }
 
 
     @Bean
