@@ -1,15 +1,19 @@
 server:
-  port: 8093
+  port: 8094
+  servlet:
+    context-path: /ballot-service
+springdoc:
+  swagger-ui.path: /swagger-ui.html
+
 spring:
   batch:
     jdbc:
       initialize-schema: always
   application:
     name: ballot-service
-  servlet:
-    context-path: /ballot-service
   flyway:
     enabled: false
+
 
   # First Database Configuration
   first-datasource:
@@ -39,3 +43,4 @@ spring:
         dialect:
           first: org.hibernate.dialect.MySQL8Dialect
           second: org.hibernate.dialect.MySQL8Dialect
+
