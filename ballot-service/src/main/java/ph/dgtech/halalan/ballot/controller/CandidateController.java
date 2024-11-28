@@ -11,6 +11,7 @@ import ph.dgtech.halalan.ballot.dto.CandidateDto;
 import ph.dgtech.halalan.ballot.dto.PageResponse;
 import ph.dgtech.halalan.ballot.service.CandidateService;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
