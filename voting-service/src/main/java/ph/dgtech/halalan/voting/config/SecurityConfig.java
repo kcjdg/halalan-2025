@@ -20,12 +20,19 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SecurityConfig {
 
+
+    private final String[] freeResourceUrl = {
+            "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
+            "/swagger-resources/**", "/api-docs/**",
+            "/actuator/prometheus", "error"
+    };
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/prometheus", "/actuator/health/**",
-                                "/swagger-ui", "/swagger-ui/**", "/error", "/v3/api-docs/**")
+                        .requestMatchers(freeResourceUrl)
                         .permitAll()
                         .requestMatchers("/vote").hasRole("voter-role")
                         .anyRequest().authenticated())

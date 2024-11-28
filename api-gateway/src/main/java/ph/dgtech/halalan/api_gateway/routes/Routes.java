@@ -13,21 +13,66 @@ import org.springframework.web.servlet.function.ServerResponse;
 
 import java.net.URI;
 
+import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunctions.setPath;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
 
 @Configuration
 public class Routes {
 
-    @Value("${voter-profile.serivce.url}")
-    private String voterProfileServiceUrl;
+    @Value("${voter-profile.url}")
+    private String voterProfileUrl;
+
+    @Value("${voting-service.url}")
+    private String votingServiceUrl;
+
+    @Value("${polling-service.url}")
+    private String pollingServiceUrl;
+
+    @Value("${ballot-service.url}")
+    private String ballotServiceUrl;
 
 
     @Bean
-    public RouterFunction<ServerResponse> voterProfileService() {
-        return GatewayRouterFunctions.route("voter-profile")
-                .route(RequestPredicates.path("/voter-profile/"), HandlerFunctions.http(voterProfileServiceUrl))
-                .filter(CircuitBreakerFilterFunctions.circuitBreaker("voterProfileFallBack",
+    public RouterFunction<ServerResponse> votingFunction() {
+        return GatewayRouterFunctions
+                .route("voting")
+                .route(RequestPredicates.path("/voter-profile/**"), HandlerFunctions.http(voterProfileUrl))
+                .route(RequestPredicates.path("/voting-service/**"), HandlerFunctions.http(votingServiceUrl))
+                .route(RequestPredicates.path("/polling-service/**"), HandlerFunctions.http(pollingServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("votingFallback",
                         URI.create("forward:/fallbackRoute")))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> votingSwagger() {
+        return GatewayRouterFunctions.route("votingSwagger")
+                .route(RequestPredicates.path("voter-profile/api-docs"), HandlerFunctions.http(voterProfileUrl))
+                .route(RequestPredicates.path("voting-service/api-docs"), HandlerFunctions.http(votingServiceUrl))
+                .route(RequestPredicates.path("polling-service/v3/api-docs"), HandlerFunctions.http(pollingServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("votingSwagger",
+                        URI.create("forward:/fallbackRoute")))
+                .filter(setPath("/api-docs"))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> ballotFunction() {
+        return GatewayRouterFunctions
+                .route("ballot")
+                .route(RequestPredicates.path("/ballot-service/**"), HandlerFunctions.http(ballotServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("ballotFallback",
+                        URI.create("forward:/fallbackRoute")))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> ballotSwagger() {
+        return GatewayRouterFunctions.route("ballotSwagger")
+                .route(RequestPredicates.path("ballot-service/v3/api-docs"), HandlerFunctions.http(pollingServiceUrl))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("ballotSwagger",
+                        URI.create("forward:/fallbackRoute")))
+                .filter(setPath("/api-docs"))
                 .build();
     }
 
