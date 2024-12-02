@@ -13,6 +13,24 @@ scrape_configs:
       - targets: ['host.docker.internal:8090'] ## only for demo purposes don't use host.docker.internal in production
         labels:
           application: 'Voter Profile'
+  - job_name: 'voting-service'
+    metrics_path: 'voting-service/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8091' ] ## only for demo purposes don't use host.docker.internal in production
+        labels:
+          application: 'Voting Service'
+  - job_name: 'result-aggregation'
+    metrics_path: 'result-aggregation/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8092' ] ## only for demo purposes don't use host.docker.internal in production
+        labels:
+          application: 'Result Aggregation'
+  - job_name: 'polling-service'
+    metrics_path: 'polling-service/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:8093' ] ## only for demo purposes don't use host.docker.internal in production
+        labels:
+          application: 'Polling Service'
 #  - job_name: 'order-service'
 #    metrics_path: '/actuator/prometheus'
 #    static_configs:
