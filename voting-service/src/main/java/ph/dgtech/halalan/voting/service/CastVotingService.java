@@ -26,6 +26,7 @@ public class CastVotingService {
         electionVote.setVoterId(voterId);
         var saveData = electionVoteRepository.save(electionVote);
         //TODO: send the message to kafka
+        log.info("sending votes to kafka %s %s".formatted(voterId, voteRequest));
         var voteCastEvent = mapper.mapToVoteCastEvent(saveData);
         kafkaTemplate.send("vote-cast", voteCastEvent);
     }
