@@ -44,3 +44,23 @@ spring:
           first: org.hibernate.dialect.MySQL8Dialect
           second: org.hibernate.dialect.MySQL8Dialect
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    distribution:
+        percentiles-histogram:
+            http:
+                server:
+                    requests: true
+  observations:
+    key-values:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+
+loki:
+  url: http://localhost:3100

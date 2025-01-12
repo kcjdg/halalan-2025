@@ -1,0 +1,14 @@
+domain: halalan.local.com
+mysql:
+  replicas: 1
+  username: admin
+  password: admin
+kafka:
+  replicas: 1
+keycloak:
+  bootstrapAdmin:
+    username: admin
+    password: admin
+grafana:
+  username: admin
+  password: admin
