@@ -1,0 +1,896 @@
+{
+	"info": {
+		"_postman_id": "5fab7b50-e2c9-4a16-b6e4-709a64fc2312",
+		"name": "halalan-2025",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2527067"
+	},
+	"item": [
+		{
+			"name": "ballot-service",
+			"item": [
+				{
+					"name": "create candidate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"John\",\r\n  \"middleName\": \"A.\",\r\n  \"lastName\": \"Doe\",\r\n  \"dateOfBirth\": \"1980-05-15\",\r\n  \"gender\": \"Male\",\r\n  \"photo\": \"https://example.com/photos/john-doe.jpg\",\r\n\r\n  \"electionId\": \"ca30809c-4b4c-4137-9e0d-bd3935e76702\",\r\n  \"officeTitle\": \"Senator\",\r\n  \"politicalParty\": \"Independent\",\r\n  \"ballotNumber\": 5,\r\n\r\n  \"campaignWebsite\": \"https://www.johndoe2025.com\",\r\n  \"campaignSlogan\": \"For a Brighter Future\",\r\n  \"campaignPlatform\": \"Economic reform, healthcare for all, environmental sustainability\",\r\n\r\n  \"votingDistrict\": \"District 1\",\r\n  \"electoralDivision\": \"Region 3\",\r\n\r\n  \"emailAddress\": \"john.doe@example.com\",\r\n  \"phoneNumber\": \"+1-555-1234-567\",\r\n\r\n  \"candidateStatus\": \"DECLARED\",\r\n  \"votesReceived\": 0,\r\n  \"nominationDate\": \"2024-09-15\",\r\n\r\n  \"createdBy\": \"admin\",\r\n  \"updatedBy\": \"admin\",\r\n  \"notes\": \"First-time candidate, strong local support\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8093/ballot-service/candidate",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"ballot-service",
+								"candidate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "candidate-status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"WITHDRAWN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8093/ballot-service/candidate/status?id=2836a177-ed8a-446e-aeff-3decbcde19bf",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"ballot-service",
+								"candidate",
+								"status"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2836a177-ed8a-446e-aeff-3decbcde19bf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-candidate",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"James\",\r\n  \"middleName\": \"A.\",\r\n  \"lastName\": \"Doe\",\r\n  \"dateOfBirth\": \"1980-05-15\",\r\n  \"gender\": \"Male\",\r\n  \"photo\": \"https://example.com/photos/john-doe.jpg\",\r\n\r\n  \"electionId\": \"ca30809c-4b4c-4137-9e0d-bd3935e76702\",\r\n  \"officeTitle\": \"Senator\",\r\n  \"politicalParty\": \"Independent\",\r\n  \"ballotNumber\": 5,\r\n\r\n  \"campaignWebsite\": \"https://www.johndoe2025.com\",\r\n  \"campaignSlogan\": \"For a Brighter Future\",\r\n  \"campaignPlatform\": \"Economic reform, healthcare for all, environmental sustainability\",\r\n\r\n  \"votingDistrict\": \"District 1\",\r\n  \"electoralDivision\": \"Region 3\",\r\n\r\n  \"emailAddress\": \"john.doe@example.com\",\r\n  \"phoneNumber\": \"+1-555-1234-567\",\r\n\r\n  \"candidateStatus\": \"DECLARED\",\r\n  \"votesReceived\": 0,\r\n  \"nominationDate\": \"2024-09-15\",\r\n\r\n  \"createdBy\": \"admin\",\r\n  \"updatedBy\": \"admin\",\r\n  \"notes\": \"First-time candidate, strong local support\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8093/ballot-service/candidate?id=2836a177-ed8a-446e-aeff-3decbcde19bf",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"ballot-service",
+								"candidate"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2836a177-ed8a-446e-aeff-3decbcde19bf"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-candidate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8093/ballot-service/candidate?officeTitle=Senator&page=0&size=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"ballot-service",
+								"candidate"
+							],
+							"query": [
+								{
+									"key": "officeTitle",
+									"value": "Senator"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "voters-profile",
+			"item": [
+				{
+					"name": "voter-registration",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "FNPWhGiVE2Uxa1j7JPUw9CqJpqC7Lvvn",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "voting-app",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "openid roles",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8181/realms/spring-microservices-security-realm/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "state",
+									"value": "164522d8-8842-4fe3-9765-c068e20bbba0.1053724f-7d8e-4944-9ec6-5cb3b66e3d53.e973c580-6e58-4e14-bc3b-c329f5e6dc21",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8090/",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n                     \"system\": {\r\n                       \"username\": \"johnspade\",\r\n                       \"password\": \"123\"\r\n                     },\r\n                     \"personal\": {\r\n                       \"firstName\": \"John\",\r\n                       \"middleName\": \"Spade\",\r\n                       \"lastName\": \"Williams\",\r\n                       \"email\": \"johnspade@gmail.com\",\r\n                       \"dob\": \"1993-01-01\",\r\n                       \"gender\": \"M\"\r\n                     },\r\n                     \"votingInfo\": {\r\n                       \"voterId\": \"ID-00111\"\r\n                     },\r\n                     \"address\" : {\r\n                        \"region\": \"Region IV-A\",\r\n                        \"province\": \"Cavite\",\r\n                        \"municipality\":\"Alfonso\",\r\n                        \"barangay\":\"Luksuhin Ibaba\"\r\n                     }\r\n                   }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/voter-profile/halalan/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"voter-profile",
+								"halalan",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "voter-update",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "state",
+									"value": "164522d8-8842-4fe3-9765-c068e20bbba0.1053724f-7d8e-4944-9ec6-5cb3b66e3d53.e973c580-6e58-4e14-bc3b-c329f5e6dc21",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8090/",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "FNPWhGiVE2Uxa1j7JPUw9CqJpqC7Lvvn",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "voting-app",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"personal\": {\r\n        \"firstName\": \"John\",\r\n        \"middleName\": \"Spade\",\r\n        \"lastName\": \"Williams\",\r\n        \"gender\": \"M\",\r\n        \"dob\": \"1993-01-01\",\r\n        \"email\": \"johnspade@gmail.com\"\r\n    },\r\n    \"address\": {\r\n        \"region\": \"Region IV-A\",\r\n        \"province\": \"Cavite\",\r\n        \"municipality\": \"Alfonso\",\r\n        \"barangay\": \"Luksuhin Ilaya\"\r\n    },\r\n    \"votingInfo\": {\r\n        \"voterId\": \"ID-00111\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/voter-profile/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"voter-profile",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "query voter",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "state",
+									"value": "164522d8-8842-4fe3-9765-c068e20bbba0.1053724f-7d8e-4944-9ec6-5cb3b66e3d53.e973c580-6e58-4e14-bc3b-c329f5e6dc21",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8090/",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "FNPWhGiVE2Uxa1j7JPUw9CqJpqC7Lvvn",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "voting-app",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/voter-profile/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"voter-profile",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "keycloak",
+			"item": [
+				{
+					"name": "keycloak login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/auth?response_type=code&client_id=voting-app&redirect_uri=http://www.google.com&scope=openid&state=VHVlIFNlcCAwMyAyMDI0IDE1OjE5OjQ3IEdNVCswODAwIChDaGluYSBTdGFuZGFyZCBUaW1lKQ%3D%3D",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"realms",
+								"halalan-voters",
+								"protocol",
+								"openid-connect",
+								"auth"
+							],
+							"query": [
+								{
+									"key": "response_type",
+									"value": "code"
+								},
+								{
+									"key": "client_id",
+									"value": "voting-app"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://www.google.com"
+								},
+								{
+									"key": "scope",
+									"value": "openid"
+								},
+								{
+									"key": "state",
+									"value": "VHVlIFNlcCAwMyAyMDI0IDE1OjE5OjQ3IEdNVCswODAwIChDaGluYSBTdGFuZGFyZCBUaW1lKQ%3D%3D"
+								},
+								{
+									"key": "response_type   ",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "keycloak-login",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "FNPWhGiVE2Uxa1j7JPUw9CqJpqC7Lvvn",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "voting-app",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "openid roles",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8181/realms/spring-microservices-security-realm/protocol/openid-connect/auth",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "voting-app",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "usemyname3",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8181/realms/halalan-voters/protocol/openid-connect/token",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"realms",
+								"halalan-voters",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "keycloak create users",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:53633/realms/halalan-voters/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "quarkus-service",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "secret",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "openid roles",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8181/realms/spring-microservices-security-realm/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "state",
+									"value": "164522d8-8842-4fe3-9765-c068e20bbba0.1053724f-7d8e-4944-9ec6-5cb3b66e3d53.e973c580-6e58-4e14-bc3b-c329f5e6dc21",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8090/",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"self\": null,\r\n    \"id\": null,\r\n    \"origin\": null,\r\n    \"createdTimestamp\": null,\r\n    \"username\": \"unsiquename\",\r\n    \"enabled\": true,\r\n    \"totp\": null,\r\n    \"emailVerified\": null,\r\n    \"firstName\": \"john\",\r\n    \"lastName\": \"doe\",\r\n    \"email\": \"uniqusename@gmail.com\",\r\n    \"federationLink\": null,\r\n    \"serviceAccountClientId\": null,\r\n    \"credentials\": [\r\n        {\r\n            \"id\": null,\r\n            \"type\": \"password\",\r\n            \"userLabel\": null,\r\n            \"createdDate\": null,\r\n            \"secretData\": null,\r\n            \"credentialData\": null,\r\n            \"priority\": null,\r\n            \"value\": \"123\",\r\n            \"temporary\": false,\r\n            \"device\": null,\r\n            \"hashedSaltedValue\": null,\r\n            \"salt\": null,\r\n            \"hashIterations\": null,\r\n            \"counter\": null,\r\n            \"algorithm\": null,\r\n            \"digits\": null,\r\n            \"period\": null,\r\n            \"config\": null\r\n        }\r\n    ],\r\n    \"disableableCredentialTypes\": null,\r\n    \"requiredActions\": null,\r\n    \"federatedIdentities\": null,\r\n    \"realmRoles\": null,\r\n    \"clientRoles\": null,\r\n    \"clientConsents\": null,\r\n    \"notBefore\": null,\r\n    \"applicationRoles\": null,\r\n    \"socialLinks\": null,\r\n    \"access\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:53633/admin/realms/halalan-voters/users",
+							"host": [
+								"localhost"
+							],
+							"port": "53633",
+							"path": [
+								"admin",
+								"realms",
+								"halalan-voters",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "keycloak open id",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "state",
+									"value": "164522d8-8842-4fe3-9765-c068e20bbba0.1053724f-7d8e-4944-9ec6-5cb3b66e3d53.e973c580-6e58-4e14-bc3b-c329f5e6dc21",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8090/",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "clientSecret",
+									"value": "FNPWhGiVE2Uxa1j7JPUw9CqJpqC7Lvvn",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "voting-app",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "admin-cli",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8181/realms/master/protocol/openid-connect/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8181",
+							"path": [
+								"realms",
+								"master",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "voting-service",
+			"item": [
+				{
+					"name": "voting-service",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientSecret",
+									"value": "VC6hdwxPx1aHYxP0zSYiiNKyYwssUo13",
+									"type": "string"
+								},
+								{
+									"key": "useBrowser",
+									"value": true,
+									"type": "boolean"
+								},
+								{
+									"key": "state",
+									"value": "164522d8-8842-4fe3-9765-c068e20bbba0.1053724f-7d8e-4944-9ec6-5cb3b66e3d53.e973c580-6e58-4e14-bc3b-c329f5e6dc21",
+									"type": "string"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "http://localhost:8090/",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/auth",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "http://localhost:8181/realms/halalan-voters/protocol/openid-connect/token",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "voting-app",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"electionId\": \"electionIdTEst\",\r\n    \"isValid\":true ,\r\n    \"pollingStationId\": \"aD\",\r\n    \"deviceId\": \"chromeD\",\r\n    \"geoLocation\": \"132.165.25\",\r\n    \"language\": \"Filipino\",\r\n    \"votedCandidates\": [\r\n        {\r\n        \"positionId\": \"pos4\",\r\n        \"candidateId\": \"candid22at13\"\r\n        },\r\n        {\r\n        \"positionId\": \"pos4\",\r\n        \"candidateId\": \"candid22at124\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8091/voting-service/vote",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8091",
+							"path": [
+								"voting-service",
+								"vote"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "polling-service",
+			"item": [
+				{
+					"name": "address-validate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"region\": \"Region IV-A\",\r\n    \"province\" : \"Cavite\",\r\n    \"municipality\" : \"Alfonso\",\r\n    \"barangay\": \"Luksuhin Ibaba\" \r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8093/polling-service/address/validate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8093",
+							"path": [
+								"polling-service",
+								"address",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
