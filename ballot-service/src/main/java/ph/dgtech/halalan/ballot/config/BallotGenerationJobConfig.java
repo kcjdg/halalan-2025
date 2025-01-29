@@ -7,6 +7,7 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -17,8 +18,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import ph.dgtech.halalan.ballot.dto.VotersBallotDetails;
 import ph.dgtech.halalan.ballot.model.primary.Ballot;
 import ph.dgtech.halalan.ballot.model.secondary.User;
+import ph.dgtech.halalan.ballot.service.ElectionService;
 
 import javax.sql.DataSource;
 
@@ -36,19 +39,25 @@ public class BallotGenerationJobConfig {
     @Autowired
     private PlatformTransactionManager firstTransactionManager;
 
+    @Autowired
+    private ElectionService electionService;
+
     @Bean
     public Job generateBallotJob(JobRepository jobRepository) {
+
         return new JobBuilder("generateBallotJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(insertStep(jobRepository, firstDataSource))
                 .build();
+
     }
 
     @Bean
     public Step insertStep(JobRepository jobRepository, DataSource dataSource) {
         return new StepBuilder("insertStep", jobRepository)
-                .<User, Ballot>chunk(10, new DataSourceTransactionManager(dataSource))
+                .<User, VotersBallotDetails>chunk(10, new DataSourceTransactionManager(dataSource))
                 .reader(reader())
+                .processor(itemProcessor())
                 .writer(writer())
                 .transactionManager(firstTransactionManager)
                 .build();
@@ -65,15 +74,28 @@ public class BallotGenerationJobConfig {
 
 
     @Bean
-    public JdbcBatchItemWriter<Ballot> writer() {
-        JdbcBatchItemWriter<Ballot> writer = new JdbcBatchItemWriter<>();
-        writer.setDataSource(firstDataSource);
-        writer.setSql("INSERT INTO t_ballots (ballot_id, voter_id, election_id, election_date,district_id,electoral_division ) VALUES (UUID(), :id, UUID(), CURDATE(), 'district', 'electoral_div')");
-        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        return writer;
+    public ItemProcessor<User, VotersBallotDetails> itemProcessor() {
+        return person -> {
+            var electionDto = electionService.getLastActiveElection();
+            return new VotersBallotDetails(
+                    person.getId(),
+                    electionDto.electionId(),
+                    electionDto.electionDate(),
+                    electionDto.electionType(),
+                    "electoralDivision"
+            );
+        };
     }
 
 
+    @Bean
+    public JdbcBatchItemWriter<VotersBallotDetails> writer() {
+        JdbcBatchItemWriter<VotersBallotDetails> writer = new JdbcBatchItemWriter<>();
+        writer.setDataSource(firstDataSource);
+        writer.setSql("INSERT INTO t_ballots (ballot_id, voter_id, election_id, election_date,district_id,electoral_division ) VALUES (UUID(), :voterId, :electionId, :electionDate, :districtId, :electoralDivision)");
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
+        return writer;
+    }
 
 
 }
