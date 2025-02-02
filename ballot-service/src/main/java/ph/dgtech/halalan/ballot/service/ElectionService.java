@@ -9,6 +9,7 @@ import ph.dgtech.halalan.ballot.dto.ElectionDto;
 import ph.dgtech.halalan.ballot.model.primary.Election;
 import ph.dgtech.halalan.ballot.repo.primary.ElectionRepository;
 
+import javax.ws.rs.NotFoundException;
 import java.util.Objects;
 
 @Service
@@ -18,19 +19,20 @@ public class ElectionService {
 
     private final ElectionRepository electionRepository;
 
-    public void saveElection(ElectionDto electionDto){
+    public Election saveElection(ElectionDto electionDto){
         Election election = new Election();
         election.setElectionDate(electionDto.electionDate());
         election.setElectionName(electionDto.electionName());
         election.setElectionType(electionDto.electionType());
         election.setCreatedBy("admin");
-        electionRepository.save(election);
+        return electionRepository.save(election);
     }
 
 
     public ElectionDto getLastActiveElection(){
         Election election = electionRepository
-                .findAll().getFirst();
+                .findByFlagOrderByElectionDateAsc(true)
+                .orElseThrow(NotFoundException::new);
         return new ElectionDto(
                 election.getElectionId(),
                 election.getElectionName(),

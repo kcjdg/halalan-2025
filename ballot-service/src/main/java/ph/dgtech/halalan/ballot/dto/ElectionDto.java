@@ -14,4 +14,9 @@ public record ElectionDto(
         LocalDateTime updatedTimestamp,
         boolean flag
         ) {
+
+        public ElectionDto(String electionName, LocalDate electionDate, String electionType) {
+                this(null, electionName, electionDate, electionType, null, null, null, null, false);
+        }
+
 }
