@@ -11,8 +11,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>ph.dgtech.halalan</groupId>
-
     <artifactId>ballot-service</artifactId>
     <version>1.0-SNAPSHOT</version>
 
