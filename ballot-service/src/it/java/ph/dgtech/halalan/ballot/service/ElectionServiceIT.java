@@ -8,7 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ph.dgtech.halalan.ballot.config.IntegrationTestConfiguration;
 import ph.dgtech.halalan.ballot.dto.ElectionDto;
 import ph.dgtech.halalan.ballot.exception.NotFoundException;
@@ -20,9 +26,12 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "spring.batch.jdbc.initialize-schema=never")
 @Import(IntegrationTestConfiguration.class)
- class ElectionServiceIT {
+@ContextConfiguration(initializers = IntegrationTestConfiguration.Initializer.class)
+@Testcontainers
+class ElectionServiceIT {
 
     @Autowired
     private ElectionService electionService;
@@ -61,7 +70,7 @@ import static org.junit.jupiter.api.Assertions.*;
     @Test
     void testGetLastActiveElection_whenEmptyRecord_thenThrowNotFoundException() {
         assertThrows(NotFoundException.class, () -> {
-           electionService.getLastActiveElection();
+            electionService.getLastActiveElection();
         });
     }
 
@@ -69,7 +78,7 @@ import static org.junit.jupiter.api.Assertions.*;
     @Test
     void testGetLastActiveElection_whenMultipleRecordIsPresent_returnLastActive() {
         electionService.saveElection(electionDto); //active
-        electionDto =  new ElectionDto(
+        electionDto = new ElectionDto(
                 "Presidential Election 2028",
                 LocalDate.of(2028, 5, 5),
                 "National",
@@ -84,6 +93,7 @@ import static org.junit.jupiter.api.Assertions.*;
         assertNotNull(electionDto);
         assertEquals("Halalan 2025", electionDto.electionName());
     }
+
 
 
 }

@@ -8,7 +8,7 @@ springdoc:
 spring:
   batch:
     jdbc:
-      initialize-schema: always
+      initialize-schema: never
   application:
     name: ballot-service
   flyway:
