@@ -2,15 +2,11 @@ package ph.dgtech.halalan.ballot.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ph.dgtech.halalan.ballot.dto.ElectionDto;
+import ph.dgtech.halalan.ballot.exception.NotFoundException;
 import ph.dgtech.halalan.ballot.model.primary.Election;
 import ph.dgtech.halalan.ballot.repo.primary.ElectionRepository;
-
-import javax.ws.rs.NotFoundException;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

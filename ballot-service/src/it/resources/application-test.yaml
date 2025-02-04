@@ -1,0 +1,69 @@
+server:
+  port: 8094
+  servlet:
+    context-path: /ballot-service
+springdoc:
+  swagger-ui.path: /swagger-ui.html
+
+spring:
+  batch:
+    jdbc:
+      initialize-schema: always
+  application:
+    name: ballot-service
+  flyway:
+    enabled: false
+
+
+  # First Database Configuration
+  first-datasource:
+    url: jdbc:mysql://localhost:3306/testdb
+    username: testroot
+    password: testpwd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+
+  # Second Database Configuration
+  second-datasource:
+    url: jdbc:mysql://localhost:3307/testkeycloak
+    username: testroot
+    password: testpwd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate:
+        dialect:
+          first: org.hibernate.dialect.MySQL8Dialect
+          second: org.hibernate.dialect.MySQL8Dialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    distribution:
+        percentiles-histogram:
+            http:
+                server:
+                    requests: true
+  observations:
+    key-values:
+      application: ${spring.application.name}
+  tracing:
+    sampling:
+      probability: 1.0
+
+loki:
+  url: http://localhost:3100

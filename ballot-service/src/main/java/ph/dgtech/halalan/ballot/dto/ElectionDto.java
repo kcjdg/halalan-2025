@@ -16,7 +16,11 @@ public record ElectionDto(
         ) {
 
         public ElectionDto(String electionName, LocalDate electionDate, String electionType) {
-                this(null, electionName, electionDate, electionType, null, null, null, null, false);
+                this(null, electionName, electionDate, electionType, null, null, null, null, true);
+        }
+
+        public ElectionDto(String electionName, LocalDate electionDate, String electionType, boolean isActive) {
+                this(null, electionName, electionDate, electionType, null, null, null, null, isActive);
         }
 
 }
