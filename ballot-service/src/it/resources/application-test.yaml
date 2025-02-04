@@ -17,9 +17,9 @@ spring:
 
   # First Database Configuration
   first-datasource:
-    url: jdbc:mysql://localhost:3306/ballot_service
-    username: root
-    password: mysql
+    url: jdbc:mysql://localhost:3306/testdb
+    username: testroot
+    password: testpwd
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 20000
@@ -27,9 +27,9 @@ spring:
 
   # Second Database Configuration
   second-datasource:
-    url: jdbc:mysql://localhost:3307/keycloak
-    username: keycloak
-    password: password
+    url: jdbc:mysql://localhost:3307/testkeycloak
+    username: testroot
+    password: testpwd
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 20000
