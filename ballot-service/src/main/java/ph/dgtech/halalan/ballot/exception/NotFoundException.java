@@ -5,7 +5,11 @@ import ph.dgtech.halalan.ballot.utils.MessageUtils;
 
 
 public class NotFoundException extends RuntimeException {
-    private String message;
+    private final String message;
+
+    public NotFoundException(){
+       this.message = "Unable to found the resource" ;
+    }
 
     public NotFoundException(String errorCode, Object... var2) {
         this.message = MessageUtils.getMessage(errorCode, var2);
@@ -16,7 +20,4 @@ public class NotFoundException extends RuntimeException {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }
