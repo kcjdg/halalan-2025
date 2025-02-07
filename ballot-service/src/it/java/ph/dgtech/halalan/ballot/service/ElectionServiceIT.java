@@ -8,13 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.test.context.ActiveProfiles;
 import ph.dgtech.halalan.ballot.config.IntegrationTestConfiguration;
 import ph.dgtech.halalan.ballot.dto.ElectionDto;
 import ph.dgtech.halalan.ballot.exception.NotFoundException;
@@ -25,13 +19,10 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "spring.batch.jdbc.initialize-schema=never")
-@Import(IntegrationTestConfiguration.class)
-@ContextConfiguration(initializers = IntegrationTestConfiguration.Initializer.class)
-@Testcontainers
-class ElectionServiceIT {
+@ActiveProfiles("test")
+class ElectionServiceIT extends IntegrationTestConfiguration {
 
     @Autowired
     private ElectionService electionService;
@@ -48,6 +39,7 @@ class ElectionServiceIT {
                 LocalDate.of(2025, 5, 5),
                 "National"
         );
+
     }
 
     @AfterEach
@@ -69,6 +61,13 @@ class ElectionServiceIT {
     @DisplayName("Get last active election when empty record then should throw not found")
     @Test
     void testGetLastActiveElection_whenEmptyRecord_thenThrowNotFoundException() {
+        electionDto = new ElectionDto(
+                "Halalan 2025 ",
+                LocalDate.of(2025, 5, 5),
+                "National",
+                false
+        );
+        electionService.saveElection(electionDto);
         assertThrows(NotFoundException.class, () -> {
             electionService.getLastActiveElection();
         });
@@ -77,13 +76,14 @@ class ElectionServiceIT {
     @DisplayName("Get last active election when multiple records are present")
     @Test
     void testGetLastActiveElection_whenMultipleRecordIsPresent_returnLastActive() {
-        electionService.saveElection(electionDto); //active
+        electionService.saveElection(electionDto);
         electionDto = new ElectionDto(
                 "Presidential Election 2028",
                 LocalDate.of(2028, 5, 5),
                 "National",
                 false
-        ); //inactive
+        );
+        //inactive
         electionService.saveElection(electionDto);
 
         var list = electionRepository.findAll();
@@ -93,7 +93,6 @@ class ElectionServiceIT {
         assertNotNull(electionDto);
         assertEquals("Halalan 2025", electionDto.electionName());
     }
-
 
 
 }

@@ -3,6 +3,7 @@ package ph.dgtech.halalan.ballot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ph.dgtech.halalan.ballot.dto.ElectionDto;
 import ph.dgtech.halalan.ballot.exception.NotFoundException;
 import ph.dgtech.halalan.ballot.model.primary.Election;
@@ -11,6 +12,7 @@ import ph.dgtech.halalan.ballot.repo.primary.ElectionRepository;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ElectionService {
 
     private final ElectionRepository electionRepository;
@@ -21,10 +23,12 @@ public class ElectionService {
         election.setElectionName(electionDto.electionName());
         election.setElectionType(electionDto.electionType());
         election.setCreatedBy("admin");
+        election.setFlag(electionDto.flag());
         return electionRepository.save(election);
     }
 
 
+    @Transactional(readOnly = true)
     public ElectionDto getLastActiveElection(){
         Election election = electionRepository
                 .findByFlagOrderByElectionDateAsc(true)

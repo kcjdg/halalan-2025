@@ -1,5 +1,5 @@
 server:
-  port: 8094
+  port: 9100
   servlet:
     context-path: /ballot-service
 springdoc:
@@ -7,33 +7,34 @@ springdoc:
 
 spring:
   batch:
-    jdbc:
-      initialize-schema: never
-  application:
-    name: ballot-service
-  flyway:
     enabled: false
+    jdbc:
+      initialize-schema: always
+  application:
+    name: ballot-service-test
+  flyway:
+    enabled: true
 
 
   # First Database Configuration
-  first-datasource:
-    url: jdbc:mysql://localhost:3306/testdb
-    username: testroot
-    password: testpwd
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      connection-timeout: 20000
-      maximum-pool-size: 5
-
-  # Second Database Configuration
-  second-datasource:
-    url: jdbc:mysql://localhost:3307/testkeycloak
-    username: testroot
-    password: testpwd
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      connection-timeout: 20000
-      maximum-pool-size: 5
+#  first-datasource:
+#    url: jdbc:mysql://localhost:3306/testdb
+#    username: testroot
+#    password: testpwd
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    hikari:
+#      connection-timeout: 20000
+#      maximum-pool-size: 5
+#
+#  # Second Database Configuration
+#  second-datasource:
+#    url: jdbc:mysql://localhost:3307/testkeycloak
+#    username: testroot
+#    password: testpwd
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    hikari:
+#      connection-timeout: 20000
+#      maximum-pool-size: 5
 
   jpa:
     hibernate:
