@@ -8,8 +8,7 @@ public class NotFoundException extends RuntimeException {
     private final String message;
 
     public NotFoundException(){
-       this.message = "Unable to found the resource" ;
-    }
+       this.message = "Unable to found the resource" ;}
 
     public NotFoundException(String errorCode, Object... var2) {
         this.message = MessageUtils.getMessage(errorCode, var2);

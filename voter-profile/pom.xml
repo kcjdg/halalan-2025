@@ -138,14 +138,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
-                <version>4.0.5</version>
-                <configuration>
-                    <failOnNoContracts>false</failOnNoContracts>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <repositories>
