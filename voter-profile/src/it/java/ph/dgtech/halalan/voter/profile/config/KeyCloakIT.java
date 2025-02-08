@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.voter.profile.integration.config;
+package ph.dgtech.halalan.voter.profile.config;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.restassured.RestAssured;
@@ -17,7 +17,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class KeyCloakTestContainers {
+public abstract class KeyCloakIT {
 
 
     @LocalServerPort

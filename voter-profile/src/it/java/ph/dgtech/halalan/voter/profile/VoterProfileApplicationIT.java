@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.voter.profile.integration;
+package ph.dgtech.halalan.voter.profile;
 
 
 import org.hamcrest.Matchers;
@@ -8,15 +8,15 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import ph.dgtech.halalan.voter.profile.dto.info.AddressInfo;
-import ph.dgtech.halalan.voter.profile.integration.config.KeyCloakTestContainers;
-import ph.dgtech.halalan.voter.profile.integration.stubs.AddressClientStub;
+import ph.dgtech.halalan.voter.profile.config.KeyCloakIT;
+import ph.dgtech.halalan.voter.profile.stubs.AddressClientStub;
 
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureWireMock(port = 0)
-class VoterProfileApplicationTest extends KeyCloakTestContainers {
+class VoterProfileApplicationIT extends KeyCloakIT {
 
     private static final String PATH = "/v1";
 
