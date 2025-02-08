@@ -61,15 +61,15 @@ class ElectionServiceTest {
         when(electionRepository.findByFlagOrderByElectionDateAsc(true)).thenReturn(Optional.of(election));
         ElectionDto  dto = electionService.getLastActiveElection();
         assertNotNull(dto);
-        assertEquals(dto.electionId(), "3930ab8e-de67-11ef-b28f-0242ac13000b");
+        assertEquals("3930ab8e-de67-11ef-b28f-0242ac13000b", dto.electionId());
     }
 
 
     @Test
     void testGetLastActiveElection_whenNoActiveElection_thenThrowNotFound(){
-        assertThrows(NotFoundException.class, ()-> {
+        assertThrows(NotFoundException.class, () -> {
             when(electionRepository.findByFlagOrderByElectionDateAsc(true)).thenThrow(NotFoundException.class);
-            ElectionDto dto = electionService.getLastActiveElection();
+            electionService.getLastActiveElection();
         });
     }
 

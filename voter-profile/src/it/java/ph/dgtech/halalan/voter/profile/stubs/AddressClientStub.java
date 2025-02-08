@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.voter.profile.integration.stubs;
+package ph.dgtech.halalan.voter.profile.stubs;
 
 import ph.dgtech.halalan.voter.profile.dto.info.AddressInfo;
 

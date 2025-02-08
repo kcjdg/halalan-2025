@@ -1,4 +1,4 @@
-package ph.dgtech.halalan.voter.profile.integration;
+package ph.dgtech.halalan.voter.profile;
 
 
 import org.hamcrest.Matchers;
@@ -6,15 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 import ph.dgtech.halalan.voter.profile.dto.info.AddressInfo;
-import ph.dgtech.halalan.voter.profile.integration.config.KeyCloakTestContainers;
-import ph.dgtech.halalan.voter.profile.integration.stubs.AddressClientStub;
+import ph.dgtech.halalan.voter.profile.config.KeyCloakIT;
+import ph.dgtech.halalan.voter.profile.stubs.AddressClientStub;
 
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 @AutoConfigureWireMock(port = 0)
-public class VoterProfileApplicationTest extends KeyCloakTestContainers {
+class VoterProfileApplicationIT extends KeyCloakIT {
 
     private static final String PATH = "/v1";
 
@@ -24,7 +26,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
     }
 
     @Test
-    public void givenAuthenticatedUser_whenAccess_shouldReturnOK() {
+     void givenAuthenticatedUser_whenAccess_shouldReturnOK() {
         given()
                 .auth().oauth2(getAccessToken("johnywalker@halalan-voters.com", "s3cr3t"))
                 .when()
@@ -47,7 +49,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
 
 
     @Test
-    public void givenUpdatedUserDetails_whenPutMethodCalled_shouldReturnNoContent() {
+     void givenUpdatedUserDetails_whenPutMethodCalled_shouldReturnNoContent() {
         /**
          * Updated user details
          * middleName: Deep
@@ -86,7 +88,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
     }
 
     @Test
-    public void givenClientCredentials_whenRegister_shouldReturnCreatedStatus() {
+     void givenClientCredentials_whenRegister_shouldReturnCreatedStatus() {
         AddressInfo address = new AddressInfo( "Region IV-A", "Laguna", "Calamba City", "Bucal");
         AddressClientStub.stubValidateAddress(address);
         given(getRequestSpecification())
@@ -100,7 +102,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
     }
 
     @Test
-    public void givenIncorrectAddress_whenRegister_shouldReturnBadRequest() {
+     void givenIncorrectAddress_whenRegister_shouldReturnBadRequest() {
         AddressInfo address = new AddressInfo( "RegionTest", "ProvinceTest", "CityTest", "BarangayTest"); //Incorrect Address
         AddressClientStub.stubAddressNotFound(address);
         given(getRequestSpecification())
@@ -115,7 +117,7 @@ public class VoterProfileApplicationTest extends KeyCloakTestContainers {
 
 
     @Test
-    public void givenIncorrectAddress_whenRegisterAndServerUnavailable_shouldReturnInternalServerError() {
+     void givenIncorrectAddress_whenRegisterAndServerUnavailable_shouldReturnInternalServerError() {
         AddressInfo address = new AddressInfo( "Region IV-A", "Laguna", "Calamba City", "Bucal");
         AddressClientStub.stubInternalServer(address);
         given(getRequestSpecification())

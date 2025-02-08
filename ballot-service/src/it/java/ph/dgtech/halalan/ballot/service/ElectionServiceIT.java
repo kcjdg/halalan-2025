@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import ph.dgtech.halalan.ballot.config.IntegrationTestConfiguration;
 import ph.dgtech.halalan.ballot.dto.ElectionDto;
 import ph.dgtech.halalan.ballot.exception.NotFoundException;
@@ -19,10 +19,10 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(IntegrationTestConfiguration.class)
- class ElectionServiceIT {
+@ActiveProfiles("test")
+class ElectionServiceIT extends IntegrationTestConfiguration {
 
     @Autowired
     private ElectionService electionService;
@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
                 LocalDate.of(2025, 5, 5),
                 "National"
         );
+
     }
 
     @AfterEach
@@ -60,21 +61,29 @@ import static org.junit.jupiter.api.Assertions.*;
     @DisplayName("Get last active election when empty record then should throw not found")
     @Test
     void testGetLastActiveElection_whenEmptyRecord_thenThrowNotFoundException() {
+        electionDto = new ElectionDto(
+                "Halalan 2025 ",
+                LocalDate.of(2025, 5, 5),
+                "National",
+                false
+        );
+        electionService.saveElection(electionDto);
         assertThrows(NotFoundException.class, () -> {
-           electionService.getLastActiveElection();
+            electionService.getLastActiveElection();
         });
     }
 
     @DisplayName("Get last active election when multiple records are present")
     @Test
     void testGetLastActiveElection_whenMultipleRecordIsPresent_returnLastActive() {
-        electionService.saveElection(electionDto); //active
-        electionDto =  new ElectionDto(
+        electionService.saveElection(electionDto);
+        electionDto = new ElectionDto(
                 "Presidential Election 2028",
                 LocalDate.of(2028, 5, 5),
                 "National",
                 false
-        ); //inactive
+        );
+        //inactive
         electionService.saveElection(electionDto);
 
         var list = electionRepository.findAll();

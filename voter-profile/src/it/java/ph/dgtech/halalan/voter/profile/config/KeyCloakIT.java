@@ -1,12 +1,10 @@
-package ph.dgtech.halalan.voter.profile.integration.config;
+package ph.dgtech.halalan.voter.profile.config;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
@@ -16,14 +14,11 @@ import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 
 import java.util.Map;
 
-import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class KeyCloakTestContainers {
+public abstract class KeyCloakIT {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KeyCloakTestContainers.class.getName());
 
     @LocalServerPort
     private int port;
@@ -45,7 +40,7 @@ public abstract class KeyCloakTestContainers {
     @DynamicPropertySource
     static void registerResourceServerIssuerProperty(DynamicPropertyRegistry registry) {
         registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> keycloak.getAuthServerUrl() + "/realms/halalan-voters");
-        registry.add("keycloak.auth-server-url", () -> keycloak.getAuthServerUrl());
+        registry.add("keycloak.auth-server-url", keycloak::getAuthServerUrl);
     }
 
 

@@ -18,6 +18,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableTransactionManagement
@@ -47,11 +49,15 @@ public class PrimaryDatabaseConfig {
     @Primary
     @Bean
     public LocalContainerEntityManagerFactoryBean firstEntityManagerFactory(
-            EntityManagerFactoryBuilder builder) {
+            EntityManagerFactoryBuilder builder,
+             @Qualifier("firstDataSource") DataSource dataSource) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
         return builder
-                .dataSource(firstDataSource())
+                .dataSource(dataSource)
                 .packages("ph.dgtech.halalan.ballot.model.primary")
                 .persistenceUnit("firstPU")
+                .properties(properties)
                 .build();
     }
 
@@ -64,9 +70,9 @@ public class PrimaryDatabaseConfig {
 
     @Primary
     @Bean
-    public Flyway firstFlyway() {
+    public Flyway firstFlyway(@Qualifier("firstDataSource") DataSource dataSource) {
         return Flyway.configure()
-                .dataSource(firstDataSource())
+                .dataSource(dataSource)
                 .locations("classpath:db/migration/primary")
                 .baselineOnMigrate(true)
                 .load();
