@@ -20,6 +20,7 @@ import static io.restassured.RestAssured.given;
 public abstract class KeyCloakIT {
 
 
+
     @LocalServerPort
     private int port;
 
