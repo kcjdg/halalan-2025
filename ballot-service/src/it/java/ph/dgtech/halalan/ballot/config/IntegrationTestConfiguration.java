@@ -24,8 +24,7 @@ public abstract class IntegrationTestConfiguration {
             .withUrlParam("useSSL", "false");
 
     static {
-        System.setProperty("testcontainers.ryuk.disabled", "true");
-        System.setProperty("testcontainers.reuse.enable", "true");
+
         primaryDb.start();
         secondaryDb.start();
     }
