@@ -18,7 +18,7 @@
     <properties>
         <sonar.organization>kencrisjohn</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.projectKey>kcjdg_halalan-2025_ballot-service</sonar.projectKey>
+        <sonar.projectKey>kencrisjohn_halalan-2025.ballot-service</sonar.projectKey>
 
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
