@@ -23,10 +23,10 @@ public class CandidateService {
     private final CandidateRepository candidateRepository;
     private final CandidateMapper candidateMapper;
 
-    public void createCandidate(CandidateDto request) {
+    public Candidate createCandidate(CandidateDto request) {
         log.info("Creating candidate: {}", request);
         final var entity = candidateMapper.toEntity(request);
-        candidateRepository.save(entity);
+        return candidateRepository.save(entity);
     }
 
     public void updateCandidate(String id, CandidateDto reqDto) {

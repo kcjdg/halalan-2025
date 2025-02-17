@@ -34,6 +34,6 @@ CREATE TABLE t_candidates (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY (candidate_id),
-    INDEX (election_id),
-    INDEX (ballot_number)
+    INDEX idx_election_id (election_id),
+    INDEX idx_ballot_number (ballot_number)
 );
